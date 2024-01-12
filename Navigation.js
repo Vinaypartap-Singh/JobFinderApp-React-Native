@@ -3,13 +3,20 @@ import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import LoginScreen from "./screens/LoginScreen";
-import RegisterScreen from "./screens/Register";
+import LookFor from "./screens/LookFor";
+import RegisterRecruiter from "./screens/RegisterScreens/RegisterRecruiter";
+import RegisterFreelancer from "./screens/RegisterScreens/RegisterFreelancer";
 
 export default function Navigation() {
   const Stack = createNativeStackNavigator();
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator initialRouteName="LookingFor">
+        <Stack.Screen
+          name="LookingFor"
+          component={LookFor}
+          options={{ headerShown: false }}
+        />
         <Stack.Screen
           name="Login"
           component={LoginScreen}
@@ -18,11 +25,16 @@ export default function Navigation() {
           }}
         />
         <Stack.Screen
-          name="Register"
-          component={RegisterScreen}
+          name="RegisterRecruiter"
+          component={RegisterRecruiter}
           options={{
             headerShown: false,
           }}
+        />
+        <Stack.Screen
+          name="RegisterFreelancer"
+          component={RegisterFreelancer}
+          options={{ headerShown: false }}
         />
       </Stack.Navigator>
     </NavigationContainer>

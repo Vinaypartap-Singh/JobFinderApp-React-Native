@@ -20,7 +20,7 @@ import {
 } from "react-native-heroicons/outline";
 import { useNavigation } from "@react-navigation/native";
 
-export default function RegisterScreen() {
+export default function RegisterRecruiter() {
   const navigation = useNavigation();
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
