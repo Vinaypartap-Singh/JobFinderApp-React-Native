@@ -6,6 +6,7 @@ import LoginScreen from "./screens/LoginScreen";
 import LookFor from "./screens/LookFor";
 import RegisterRecruiter from "./screens/RegisterScreens/RegisterRecruiter";
 import RegisterFreelancer from "./screens/RegisterScreens/RegisterFreelancer";
+import TestScreen from "./screens/TestScreen";
 
 export default function Navigation() {
   const Stack = createNativeStackNavigator();
@@ -34,6 +35,11 @@ export default function Navigation() {
         <Stack.Screen
           name="RegisterFreelancer"
           component={RegisterFreelancer}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Home"
+          component={TestScreen}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

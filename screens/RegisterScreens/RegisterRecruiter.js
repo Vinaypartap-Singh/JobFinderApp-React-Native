@@ -1,7 +1,5 @@
 import {
   Alert,
-  Image,
-  KeyboardAvoidingView,
   ScrollView,
   StyleSheet,
   Text,
@@ -19,6 +17,9 @@ import {
   HomeIcon,
 } from "react-native-heroicons/outline";
 import { useNavigation } from "@react-navigation/native";
+import { auth, db } from "../../firebase";
+import { doc, setDoc } from "firebase/firestore";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 
 export default function RegisterRecruiter() {
   const navigation = useNavigation();
@@ -29,7 +30,7 @@ export default function RegisterRecruiter() {
   const [address, setAddress] = useState("");
   const [password, setPassword] = useState("");
 
-  const registerUser = () => {
+  const registerUser = async () => {
     if (
       username === "" ||
       email === "" ||
@@ -54,20 +55,44 @@ export default function RegisterRecruiter() {
         ]
       );
     } else {
-      Alert.alert(
-        "Registration Success",
-        "Your Account has been created successfully",
-        [
-          {
-            text: "Ok",
-            style: "default",
-          },
-          {
-            text: "Cancel",
-            style: "cancel",
-          },
-        ]
-      );
+      createUserWithEmailAndPassword(auth, email, password)
+        .then(async (userCredential) => {
+          // Signed up
+          const user = userCredential.user;
+          const uid = user.uid;
+
+          setDoc(doc(db, "users", `${uid}`), {
+            username: username,
+            email: email,
+            phone: phone,
+            companyName: companyName,
+            address: address,
+            password: password,
+            isRecruiter: true,
+          });
+
+          Alert.alert(
+            "Registration Success",
+            "Your Recruiter Account has been created successfully",
+            [
+              {
+                text: "Ok",
+                style: "default",
+              },
+              {
+                text: "Cancel",
+                style: "cancel",
+              },
+            ]
+          );
+          navigation.navigate("Login");
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          console.log(errorMessage);
+          // ..
+        });
     }
   };
 

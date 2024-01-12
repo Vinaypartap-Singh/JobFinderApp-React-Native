@@ -18,6 +18,9 @@ import {
   AcademicCapIcon,
 } from "react-native-heroicons/outline";
 import { useNavigation } from "@react-navigation/native";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth, db } from "../../firebase";
+import { doc, setDoc } from "firebase/firestore";
 
 export default function RegisterFreelancer() {
   const navigation = useNavigation();
@@ -53,20 +56,43 @@ export default function RegisterFreelancer() {
         ]
       );
     } else {
-      Alert.alert(
-        "Registration Success",
-        "Your Account has been created successfully",
-        [
-          {
-            text: "Ok",
-            style: "default",
-          },
-          {
-            text: "Cancel",
-            style: "cancel",
-          },
-        ]
-      );
+      createUserWithEmailAndPassword(auth, email, password)
+        .then(async (userCredential) => {
+          // Signed up
+          const user = userCredential.user;
+          const uid = user.uid;
+
+          setDoc(doc(db, "users", `${uid}`), {
+            username: username,
+            email: email,
+            phone: phone,
+            skills: skills,
+            address: address,
+            password: password,
+            iscandidate: true,
+          });
+
+          Alert.alert(
+            "Registration Success",
+            "Your Freelancer Account has been created successfully",
+            [
+              {
+                text: "Ok",
+                style: "default",
+              },
+              {
+                text: "Cancel",
+                style: "cancel",
+              },
+            ]
+          );
+          navigation.navigate("Login");
+        })
+        .catch((error) => {
+          const errorMessage = error.message;
+          console.log(errorMessage);
+          // ..
+        });
     }
   };
 

@@ -14,7 +14,7 @@ export default function LookFor() {
     >
       <View style={{ paddingHorizontal: 20 }}>
         <Text style={{ fontSize: 24, fontWeight: "bold", textAlign: "center" }}>
-          Continue As
+          What are you looking for ?
         </Text>
         <TouchableOpacity
           onPress={() => navigation.navigate("RegisterRecruiter")}
@@ -34,7 +34,7 @@ export default function LookFor() {
               fontWeight: 700,
             }}
           >
-            Recruiter
+            Want to Hire Candidate
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -55,7 +55,7 @@ export default function LookFor() {
               fontWeight: 700,
             }}
           >
-            Freelancer
+            Want To Get Job
           </Text>
         </TouchableOpacity>
       </View>

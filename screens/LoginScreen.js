@@ -1,12 +1,71 @@
 import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { EnvelopeIcon, LockClosedIcon } from "react-native-heroicons/outline";
 import { useNavigation } from "@react-navigation/native";
+import { onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
+import { auth, db } from "../firebase";
+import { doc, getDoc } from "firebase/firestore";
 
 const LoginScreen = () => {
   const navigation = useNavigation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (authuser) => {
+      if (!authuser) {
+        setLoading(false);
+      }
+
+      if (authuser) {
+        const docRef = doc(db, "users", `${authuser.uid}`);
+
+        try {
+          const docSnapshot = await getDoc(docRef);
+
+          if (docSnapshot.exists()) {
+            const sub = docSnapshot.data();
+
+            if (sub.isRecruiter === true) {
+              Alert.alert("Recruiter Account", "This is an recruiter account", [
+                {
+                  text: "Ok",
+                  style: "default",
+                },
+                {
+                  text: "Cancel",
+                  style: "cancel",
+                },
+              ]);
+            } else if (sub.isCandidate === true) {
+              Alert.alert("Candidate Account", "This is an Candidate account", [
+                {
+                  text: "Ok",
+                  style: "default",
+                },
+                {
+                  text: "Cancel",
+                  style: "cancel",
+                },
+              ]);
+            }
+          }
+        } catch (error) {
+          Alert.alert("Error Occured", error, [
+            {
+              text: "Ok",
+              style: "default",
+            },
+            {
+              text: "Cancel",
+              style: "cancel",
+            },
+          ]);
+        }
+      }
+    });
+  }, []);
 
   const logInUser = () => {
     if (email === "" || password.length < 10) {
@@ -21,6 +80,15 @@ const LoginScreen = () => {
         },
       ]);
     } else {
+      signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          const user = userCredential.user;
+          navigation.navigate("Home");
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+        });
       Alert.alert(
         "Login Success",
         "Your account has been logged in successfully",
@@ -131,7 +199,7 @@ const LoginScreen = () => {
           <Text style={{ color: "black", fontWeight: 500, fontSize: 17 }}>
             Don't have an account?
           </Text>
-          <TouchableOpacity onPress={() => navigation.navigate("Register")}>
+          <TouchableOpacity onPress={() => navigation.navigate("LookingFor")}>
             <Text style={{ fontWeight: 700, fontSize: 17 }}>Register Now</Text>
           </TouchableOpacity>
         </View>
