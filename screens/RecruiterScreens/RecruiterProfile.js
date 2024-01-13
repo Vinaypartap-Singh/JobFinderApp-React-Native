@@ -1,10 +1,10 @@
 import { View, Text } from "react-native";
 import React from "react";
 
-export default function TestScreen() {
+export default function RecruiterProfile() {
   return (
     <View>
-      <Text>This is just test screen</Text>
+      <Text>REcruiterProfile</Text>
     </View>
   );
 }

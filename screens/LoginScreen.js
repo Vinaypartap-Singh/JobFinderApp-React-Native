@@ -38,6 +38,7 @@ const LoginScreen = () => {
                   style: "cancel",
                 },
               ]);
+              navigation.navigate("RecruiterDashboard");
             } else if (sub.isCandidate === true) {
               Alert.alert("Candidate Account", "This is an Candidate account", [
                 {
@@ -49,6 +50,8 @@ const LoginScreen = () => {
                   style: "cancel",
                 },
               ]);
+
+              navigation.navigate("Test");
             }
           }
         } catch (error) {
@@ -65,6 +68,8 @@ const LoginScreen = () => {
         }
       }
     });
+
+    return unsubscribe;
   }, []);
 
   const logInUser = () => {
