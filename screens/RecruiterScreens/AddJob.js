@@ -10,7 +10,7 @@ import React, { useState } from "react";
 import { theme } from "../../theme";
 import { BriefcaseIcon } from "react-native-heroicons/solid";
 import { auth, db } from "../../firebase";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { addDoc, doc, getDoc, setDoc } from "firebase/firestore";
 
 export default function AddJob() {
   const [jobTitle, setJobTitle] = useState("");

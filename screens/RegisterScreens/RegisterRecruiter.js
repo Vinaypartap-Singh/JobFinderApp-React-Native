@@ -15,6 +15,7 @@ import {
   PhoneIcon,
   BuildingOfficeIcon,
   HomeIcon,
+  UserCircleIcon,
 } from "react-native-heroicons/outline";
 import { useNavigation } from "@react-navigation/native";
 import { auth, db } from "../../firebase";
@@ -29,6 +30,8 @@ export default function RegisterRecruiter() {
   const [companyName, setCompanyName] = useState("");
   const [address, setAddress] = useState("");
   const [password, setPassword] = useState("");
+  const [recruiterRole, setRecruiterRole] = useState("");
+  const [profileImage, setProfileImage] = useState("");
 
   const registerUser = async () => {
     if (
@@ -38,7 +41,9 @@ export default function RegisterRecruiter() {
       phone.length < 10 ||
       companyName == "" ||
       address === "" ||
-      password === ""
+      password === "" ||
+      recruiterRole === "" ||
+      profileImage === ""
     ) {
       Alert.alert(
         "Invalid Details",
@@ -69,6 +74,8 @@ export default function RegisterRecruiter() {
             address: address,
             password: password,
             isRecruiter: true,
+            recruiterRole: recruiterRole,
+            profileImage: profileImage,
           });
 
           Alert.alert(
@@ -152,6 +159,44 @@ export default function RegisterRecruiter() {
               autoCapitalize="none"
               autoCorrect={false}
               onChangeText={(text) => setEmail(text)}
+            />
+          </View>
+          <View
+            style={{
+              borderWidth: 1,
+              borderRadius: 10,
+              paddingVertical: 20,
+              flexDirection: "row",
+              paddingHorizontal: 20,
+              alignItems: "center",
+              gap: 10,
+            }}
+          >
+            <UserCircleIcon size={25} color={"black"} />
+            <TextInput
+              placeholder="Role"
+              autoCapitalize="none"
+              autoCorrect={false}
+              onChangeText={(text) => setRecruiterRole(text)}
+            />
+          </View>
+          <View
+            style={{
+              borderWidth: 1,
+              borderRadius: 10,
+              paddingVertical: 20,
+              flexDirection: "row",
+              paddingHorizontal: 20,
+              alignItems: "center",
+              gap: 10,
+            }}
+          >
+            <UserCircleIcon size={25} color={"black"} />
+            <TextInput
+              placeholder="Profile Image URL"
+              autoCapitalize="none"
+              autoCorrect={false}
+              onChangeText={(text) => setProfileImage(text)}
             />
           </View>
           <View
