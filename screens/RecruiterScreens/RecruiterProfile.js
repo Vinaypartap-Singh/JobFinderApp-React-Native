@@ -5,9 +5,10 @@ import {
   TouchableOpacity,
   Image,
   ScrollView,
+  Alert,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { doc, getDoc, onSnapshot } from "firebase/firestore";
+import { doc, getDoc, onSnapshot, setDoc } from "firebase/firestore";
 import { auth, db } from "../../firebase";
 import { theme } from "../../theme";
 import { signOut } from "firebase/auth";
@@ -22,7 +23,7 @@ export default function RecruiterProfile() {
   const navigation = useNavigation();
   const userId = auth.currentUser.uid;
   const [userProfile, setUserProfile] = useState(null);
-  const [recruiterJobs, setRecruiterJobs] = useState(null);
+  const [recruiterJobs, setRecruiterJobs] = useState([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -51,6 +52,42 @@ export default function RecruiterProfile() {
 
     getRecruiterJobs();
   }, []);
+
+  const handleDeleteJob = async (index) => {
+    try {
+      const uid = auth.currentUser.uid;
+      const docRef = doc(db, "users", `${uid}`);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        const existingJobs = docSnap.data()?.jobs || [];
+
+        // Remove the job at the specified index
+        existingJobs.splice(index, 1);
+
+        // Update the document with the modified jobs array
+        await setDoc(
+          docRef,
+          {
+            jobs: existingJobs,
+          },
+          { merge: true }
+        );
+
+        // Optional: You can update the local state as well
+        setRecruiterJobs(existingJobs);
+
+        Alert.alert("Job Deleted", "Your job has been deleted successfully.", [
+          {
+            text: "Ok",
+            style: "default",
+          },
+        ]);
+      }
+    } catch (error) {
+      console.error("Error deleting job:", error);
+    }
+  };
 
   return (
     <ScrollView
@@ -106,7 +143,7 @@ export default function RecruiterProfile() {
               </View>
               {/* Show Jobs By Recruiter */}
 
-              {recruiterJobs ? (
+              {recruiterJobs.length > 0 ? (
                 <View style={{ gap: 20, marginTop: 30 }}>
                   <Text style={{ fontSize: 20, fontWeight: 700 }}>
                     Your Jobs
@@ -114,16 +151,22 @@ export default function RecruiterProfile() {
                   {recruiterJobs.map((data, index) => {
                     return (
                       <View
+                        key={index}
                         style={{
                           backgroundColor: theme.lightBackgroundColor,
-
                           paddingVertical: 10,
                           borderRadius: 10,
                           paddingHorizontal: 20,
                           gap: 12,
                         }}
                       >
-                        <Text style={{ fontWeight: 600, fontSize: 18 }}>
+                        <Text
+                          style={{
+                            fontWeight: 600,
+                            fontSize: 18,
+                            marginTop: 10,
+                          }}
+                        >
                           Company: {data.companyName}
                         </Text>
 
@@ -159,6 +202,7 @@ export default function RecruiterProfile() {
                             fontWeight: 400,
                             fontSize: 16,
                             color: theme.lightColor,
+                            lineHeight: 30,
                           }}
                         >
                           Job Description: {data.jobDescription}
@@ -219,6 +263,19 @@ export default function RecruiterProfile() {
                         >
                           Contact: {data.contactInformation}
                         </Text> */}
+
+                        <TouchableOpacity
+                          onPress={() => handleDeleteJob(index)}
+                          style={{
+                            padding: 10,
+                            borderRadius: 5,
+                            alignItems: "center",
+                          }}
+                        >
+                          <Text style={{ color: "red", fontWeight: "bold" }}>
+                            Delete Job
+                          </Text>
+                        </TouchableOpacity>
                       </View>
                     );
                   })}
