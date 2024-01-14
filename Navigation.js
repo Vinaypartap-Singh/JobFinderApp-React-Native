@@ -8,7 +8,6 @@ import LoginScreen from "./screens/LoginScreen";
 import LookFor from "./screens/LookFor";
 import RegisterRecruiter from "./screens/RegisterScreens/RegisterRecruiter";
 import RegisterFreelancer from "./screens/RegisterScreens/RegisterFreelancer";
-import CandidateTest from "./screens/CandidateScreens/CandidateTest";
 import HomeRecruiter from "./screens/RecruiterScreens/HomeScreen";
 import ViewCandidate from "./screens/RecruiterScreens/ViewCandidate";
 import AddJob from "./screens/RecruiterScreens/AddJob";
@@ -27,6 +26,9 @@ import {
   UserIcon as UserSolid,
 } from "react-native-heroicons/solid";
 import { theme } from "./theme";
+import CandidateHome from "./screens/CandidateScreens/CandidateHome";
+import CandidateJobs from "./screens/CandidateScreens/CandidateJobs";
+import CandidateProfile from "./screens/CandidateScreens/CandidateProfile";
 
 export default function Navigation() {
   const Stack = createNativeStackNavigator();
@@ -102,6 +104,57 @@ export default function Navigation() {
     );
   }
 
+  function BottomTabsCandidate() {
+    return (
+      <Tab.Navigator
+        screenOptions={{ tabBarActiveTintColor: theme.primaryColor }}
+      >
+        <Tab.Screen
+          name="Home"
+          component={CandidateHome}
+          options={{
+            headerShown: false,
+            title: "Home",
+            tabBarIcon: ({ focused }) =>
+              focused ? (
+                <HomeSolid color={theme.primaryColor} />
+              ) : (
+                <HomeIcon color={"grey"} />
+              ),
+          }}
+        />
+        <Tab.Screen
+          name="Jobs"
+          component={CandidateJobs}
+          options={{
+            headerShown: false,
+            title: "Jobs",
+            tabBarIcon: ({ focused }) =>
+              focused ? (
+                <AcademicCapIconSolid color={theme.primaryColor} />
+              ) : (
+                <AcademicCapIcon color={"grey"} />
+              ),
+          }}
+        />
+
+        <Tab.Screen
+          name="Profile"
+          component={CandidateProfile}
+          options={{
+            headerShown: false,
+            title: "Profile",
+            tabBarIcon: ({ focused }) =>
+              focused ? (
+                <UserSolid color={theme.primaryColor} />
+              ) : (
+                <UserIcon color={"grey"} />
+              ),
+          }}
+        />
+      </Tab.Navigator>
+    );
+  }
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="LookingFor">
@@ -130,13 +183,13 @@ export default function Navigation() {
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name="Test"
-          component={CandidateTest}
+          name="RecruiterDashboard"
+          component={BottomTabsRecruiter}
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name="RecruiterDashboard"
-          component={BottomTabsRecruiter}
+          name="CandidateHome"
+          component={BottomTabsCandidate}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

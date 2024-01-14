@@ -38,7 +38,7 @@ const LoginScreen = () => {
             if (sub.isRecruiter === true) {
               navigation.navigate("RecruiterDashboard");
             } else if (sub.isCandidate === true) {
-              navigation.navigate("Test");
+              navigation.navigate("CandidateHome");
             }
           }
         } catch (error) {
@@ -75,7 +75,6 @@ const LoginScreen = () => {
       signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
           const user = userCredential.user;
-          navigation.navigate("Home");
         })
         .catch((error) => {
           const errorCode = error.code;
@@ -104,7 +103,6 @@ const LoginScreen = () => {
         backgroundColor: "white",
         flex: 1,
         justifyContent: "center",
-        paddingHorizontal: 30,
       }}
     >
       {loading ? (
