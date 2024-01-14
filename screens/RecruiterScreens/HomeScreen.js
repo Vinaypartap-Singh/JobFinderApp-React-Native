@@ -52,7 +52,11 @@ export default function HomeRecruiter() {
       {recruiterJobs?.length > 0 ? (
         <View style={{ marginTop: 20 }}>
           <Text style={{ fontSize: 20, fontWeight: 700 }}>Your Jobs</Text>
-          <ScrollView horizontal style={{ gap: 20, marginTop: 20 }}>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            style={{ gap: 20, marginTop: 20 }}
+          >
             {recruiterJobs.map((data, index) => {
               return (
                 <View
