@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { theme } from "../../theme";
 import { BriefcaseIcon } from "react-native-heroicons/solid";
 import { auth, db } from "../../firebase";
@@ -75,19 +75,20 @@ export default function AddJob() {
         ]
       );
     } else {
-      const uid = auth.currentUser.uid;
-      const docRef = doc(db, "users", `${uid}`);
-      const docSnap = await getDoc(docRef);
-      const existingJobs = docSnap.data()?.jobs || [];
+      // Doc Reference for jobs
 
-      // Add the new job to the existing array
-      existingJobs.push(jobInfo);
+      const currentUserEmail = auth.currentUser.email;
 
-      // Update the document with the merged data
+      const jobDocRef = doc(db, "posts", `${currentUserEmail}`);
+      const jobDocSnap = await getDoc(jobDocRef);
+      const existingJobsRef = jobDocSnap.data()?.jobs || [];
+
+      existingJobsRef.push(jobInfo);
+
       await setDoc(
-        docRef,
+        jobDocRef,
         {
-          jobs: existingJobs,
+          jobs: existingJobsRef,
         },
         { merge: true }
       );

@@ -22,6 +22,7 @@ import {
 export default function RecruiterProfile() {
   const navigation = useNavigation();
   const userId = auth.currentUser.uid;
+  const userEmail = auth.currentUser.email;
   const [userProfile, setUserProfile] = useState(null);
   const [recruiterJobs, setRecruiterJobs] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -41,7 +42,7 @@ export default function RecruiterProfile() {
     getUserInfo();
 
     const getRecruiterJobs = async () => {
-      const docRef = doc(db, "users", `${userId}`);
+      const docRef = doc(db, "posts", `${userEmail}`);
 
       const realTimeJobUpdate = onSnapshot(docRef, (docSnap) => {
         if (docSnap.exists) {
@@ -55,8 +56,8 @@ export default function RecruiterProfile() {
 
   const handleDeleteJob = async (index) => {
     try {
-      const uid = auth.currentUser.uid;
-      const docRef = doc(db, "users", `${uid}`);
+      const userEmail = auth.currentUser.email;
+      const docRef = doc(db, "posts", `${userEmail}`);
       const docSnap = await getDoc(docRef);
 
       if (docSnap.exists()) {

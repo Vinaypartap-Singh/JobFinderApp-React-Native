@@ -5,14 +5,17 @@ import { auth, db } from "../../firebase";
 import { theme } from "../../theme";
 import { XCircleIcon } from "react-native-heroicons/outline";
 import CandidateCard from "../../components/CandidateCard";
+import { useNavigation } from "@react-navigation/native";
 
 export default function HomeRecruiter() {
+  const navigation = useNavigation();
   const [recruiterJobs, setRecruiterJobs] = useState([]);
   const [candidateList, setCandidateList] = useState([]);
-  const userId = auth.currentUser.uid;
+  const userEmail = auth.currentUser.email;
+
   useEffect(() => {
     const getRecruiterJobs = async () => {
-      const docRef = doc(db, "users", `${userId}`);
+      const docRef = doc(db, "posts", `${userEmail}`);
 
       const realTimeJobUpdate = onSnapshot(docRef, (docSnap) => {
         if (docSnap.exists) {
