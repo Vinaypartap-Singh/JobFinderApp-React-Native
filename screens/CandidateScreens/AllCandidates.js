@@ -13,12 +13,12 @@ export default function AllCandidates({ candidateList }) {
             style={{
               flexDirection: "row",
               gap: 10,
-              backgroundColor: theme.lightBackgroundColor,
               justifyContent: "space-between",
               padding: 15,
               borderRadius: 10,
               marginVertical: 10,
               width: "100%",
+              backgroundColor: theme.extraLightBackground,
             }}
           >
             <View style={{ width: "20%" }}>

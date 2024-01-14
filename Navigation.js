@@ -36,7 +36,7 @@ export default function Navigation() {
     return (
       <Tab.Navigator
         screenOptions={{
-          tabBarActiveTintColor: "black",
+          tabBarActiveTintColor: theme.primaryColor,
         }}
       >
         <Tab.Screen

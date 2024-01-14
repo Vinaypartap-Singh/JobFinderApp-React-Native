@@ -42,7 +42,7 @@ export default function CandidateCard({ candidateList }) {
               key={index}
               style={{
                 marginTop: 20,
-                backgroundColor: theme.lightBackgroundColor,
+                backgroundColor: theme.extraLightBackground,
                 alignItems: "center",
                 borderRadius: 10,
                 padding: 10,

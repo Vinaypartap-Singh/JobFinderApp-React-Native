@@ -62,7 +62,7 @@ export default function HomeRecruiter() {
                 <View
                   key={index}
                   style={{
-                    backgroundColor: theme.lightBackgroundColor,
+                    backgroundColor: theme.extraLightBackground,
                     paddingVertical: 10,
                     borderRadius: 10,
                     paddingHorizontal: 20,
