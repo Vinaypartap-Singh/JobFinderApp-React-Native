@@ -30,6 +30,8 @@ export default function RegisterFreelancer() {
   const [skills, setSkills] = useState("");
   const [address, setAddress] = useState("");
   const [password, setPassword] = useState("");
+  const [profileImage, setProfileImage] = useState("");
+  const [candidateRole, setCandidateRole] = useState("");
 
   const registerUser = () => {
     if (
@@ -39,7 +41,9 @@ export default function RegisterFreelancer() {
       phone.length < 10 ||
       skills == "" ||
       address === "" ||
-      password === ""
+      password === "" ||
+      candidateRole === "" ||
+      profileImage === ""
     ) {
       Alert.alert(
         "Invalid Details",
@@ -70,6 +74,8 @@ export default function RegisterFreelancer() {
             address: address,
             password: password,
             iscandidate: true,
+            profileImage: profileImage,
+            candidateRole: candidateRole,
           });
 
           Alert.alert(

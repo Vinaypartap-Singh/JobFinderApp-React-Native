@@ -10,9 +10,17 @@ import React, { useState } from "react";
 import { theme } from "../../theme";
 import { BriefcaseIcon } from "react-native-heroicons/solid";
 import { auth, db } from "../../firebase";
-import { addDoc, doc, getDoc, setDoc } from "firebase/firestore";
+import {
+  addDoc,
+  doc,
+  getDoc,
+  serverTimestamp,
+  setDoc,
+} from "firebase/firestore";
+import { useNavigation } from "@react-navigation/native";
 
 export default function AddJob() {
+  const navigation = useNavigation();
   const [jobTitle, setJobTitle] = useState("");
   const [jobDescription, setJobDescription] = useState("");
   const [companyName, setCompanyName] = useState("");
@@ -36,6 +44,7 @@ export default function AddJob() {
     requiredSkills: requiredSkills,
     applicationIntruction: applicationIntruction,
     contactInformation: contactInformation,
+    postedAt: new Date().toISOString(),
   };
 
   const postJob = async () => {
@@ -87,10 +96,12 @@ export default function AddJob() {
         {
           text: "Ok",
           style: "default",
+          onPress: () => navigation.navigate("RecruiterProfile"),
         },
         {
           text: "Cancel",
           style: "cancel",
+          onPress: () => navigation.navigate("Home"),
         },
       ]);
     }

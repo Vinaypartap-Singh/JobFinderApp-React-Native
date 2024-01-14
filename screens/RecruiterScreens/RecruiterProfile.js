@@ -123,27 +123,76 @@ export default function RecruiterProfile() {
               </View>
               <View
                 style={{
-                  marginTop: 30,
-                  flexDirection: "row",
+                  marginTop: 20,
+                  // flexDirection: "row",
                   gap: 10,
-                  alignItems: "center",
+                  // alignItems: "center",
+                  // justifyContent: "center",
                 }}
               >
-                <Image
-                  source={{ uri: userProfile.profileImage }}
-                  style={{ width: 80, height: 80, borderRadius: 500 }}
-                />
-                <View style={{ gap: 5 }}>
-                  <Text style={{ fontSize: 18, fontWeight: 500 }}>
+                <View style={{ alignItems: "center" }}>
+                  <Image
+                    source={{ uri: userProfile.profileImage }}
+                    style={{ width: 120, height: 120, borderRadius: 500 }}
+                  />
+                </View>
+                <View style={{ gap: 10 }}>
+                  <Text
+                    style={{
+                      fontSize: 24,
+                      fontWeight: 500,
+                      textAlign: "center",
+                    }}
+                  >
                     {userProfile.username}
                   </Text>
-                  <Text>{userProfile.email}</Text>
-                  <Text>{userProfile.recruiterRole}</Text>
+                  <Text style={{ textAlign: "center", fontWeight: 600 }}>
+                    {userProfile.email}
+                  </Text>
+                  <Text
+                    style={{
+                      textAlign: "center",
+                      fontSize: 16,
+                      fontWeight: 600,
+                    }}
+                  >
+                    {userProfile.recruiterRole}
+                  </Text>
+                </View>
+
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <TouchableOpacity
+                    style={{
+                      paddingVertical: 10,
+                      borderWidth: 1,
+                      borderRadius: 5,
+                      width: "48%",
+                    }}
+                  >
+                    <Text style={{ textAlign: "center" }}>Update Profile</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={{
+                      paddingVertical: 10,
+                      borderWidth: 1,
+                      borderRadius: 5,
+                      width: "48%",
+                    }}
+                  >
+                    <Text style={{ textAlign: "center" }}>
+                      Change Profile Image
+                    </Text>
+                  </TouchableOpacity>
                 </View>
               </View>
               {/* Show Jobs By Recruiter */}
 
-              {recruiterJobs.length > 0 ? (
+              {recruiterJobs?.length > 0 ? (
                 <View style={{ gap: 20, marginTop: 30 }}>
                   <Text style={{ fontSize: 20, fontWeight: 700 }}>
                     Your Jobs
