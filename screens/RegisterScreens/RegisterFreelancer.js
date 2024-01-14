@@ -1,5 +1,6 @@
 import {
   Alert,
+  KeyboardAvoidingView,
   ScrollView,
   StyleSheet,
   Text,
@@ -16,6 +17,7 @@ import {
   BuildingOfficeIcon,
   HomeIcon,
   AcademicCapIcon,
+  UserCircleIcon,
 } from "react-native-heroicons/outline";
 import { useNavigation } from "@react-navigation/native";
 import { createUserWithEmailAndPassword } from "firebase/auth";
@@ -73,7 +75,7 @@ export default function RegisterFreelancer() {
             skills: skills,
             address: address,
             password: password,
-            iscandidate: true,
+            isCandidate: true,
             profileImage: profileImage,
             candidateRole: candidateRole,
           });
@@ -103,7 +105,9 @@ export default function RegisterFreelancer() {
   };
 
   return (
-    <View style={{ flex: 1, paddingVertical: 30, backgroundColor: "white" }}>
+    <KeyboardAvoidingView
+      style={{ flex: 1, paddingVertical: 30, backgroundColor: "white" }}
+    >
       <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
         <View
           style={{
@@ -160,6 +164,45 @@ export default function RegisterFreelancer() {
               onChangeText={(text) => setEmail(text)}
             />
           </View>
+          <View
+            style={{
+              borderWidth: 1,
+              borderRadius: 10,
+              paddingVertical: 20,
+              flexDirection: "row",
+              paddingHorizontal: 20,
+              alignItems: "center",
+              gap: 10,
+            }}
+          >
+            <UserCircleIcon size={25} color={"black"} />
+            <TextInput
+              placeholder="Profile Image URL"
+              autoCapitalize="none"
+              autoCorrect={false}
+              onChangeText={(text) => setProfileImage(text)}
+            />
+          </View>
+          <View
+            style={{
+              borderWidth: 1,
+              borderRadius: 10,
+              paddingVertical: 20,
+              flexDirection: "row",
+              paddingHorizontal: 20,
+              alignItems: "center",
+              gap: 10,
+            }}
+          >
+            <UserIcon size={25} color={"black"} />
+            <TextInput
+              placeholder="Your Role"
+              autoCapitalize="none"
+              autoCorrect={false}
+              onChangeText={(text) => setCandidateRole(text)}
+            />
+          </View>
+
           <View
             style={{
               borderWidth: 1,
@@ -278,7 +321,7 @@ export default function RegisterFreelancer() {
           </View>
         </View>
       </ScrollView>
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 

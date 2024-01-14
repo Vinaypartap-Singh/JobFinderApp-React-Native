@@ -31,10 +31,10 @@ export default function CandidateCard({ candidateList }) {
         </TouchableOpacity>
       </View>
 
-      <ScrollView
+      <View
         horizonatal
         showsHorizontalScrollIndicator={false}
-        style={{ flexDirection: "row" }}
+        style={{ flexDirection: "row", gap: 10 }}
       >
         {candidateList.slice(0, 5).map((user, index) => {
           return (
@@ -46,6 +46,7 @@ export default function CandidateCard({ candidateList }) {
                 alignItems: "center",
                 borderRadius: 10,
                 padding: 10,
+                width: "48%",
               }}
             >
               <View>
@@ -70,7 +71,7 @@ export default function CandidateCard({ candidateList }) {
             </View>
           );
         })}
-      </ScrollView>
+      </View>
     </View>
   );
 }
