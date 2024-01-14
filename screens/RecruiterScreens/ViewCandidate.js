@@ -26,7 +26,14 @@ export default function ViewCandidate() {
     });
   }, []);
   return (
-    <View style={{ flex: 1, backgroundColor: "white", paddingHorizontal: 20 }}>
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: "white",
+        paddingHorizontal: 20,
+        paddingTop: 20,
+      }}
+    >
       {candidateList.length > 0 ? (
         <View style={{ flex: 1 }}>
           <Text style={{ fontSize: 20, fontWeight: 700 }}>
