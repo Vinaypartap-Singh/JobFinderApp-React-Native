@@ -1,10 +1,43 @@
-import { View, Text } from "react-native";
-import React from "react";
+import { View } from "react-native";
+import React, { useEffect, useState } from "react";
+import { collection, onSnapshot } from "firebase/firestore";
+import { db } from "../../firebase";
+import JobsCard from "./components/JobsCard";
 
 export default function CandidateHome() {
+  const [recruiterJobs, setRecuiterJobs] = useState([]);
+  useEffect(() => {
+    const getAllJobs = async () => {
+      const collectionRef = collection(db, "posts");
+      const unsubscribe = onSnapshot(collectionRef, (snapshot) => {
+        const allDocs = [];
+        snapshot.forEach((doc) => {
+          allDocs.push({
+            id: doc.id,
+            ...doc.data().jobs,
+          });
+        });
+
+        setRecuiterJobs(allDocs);
+      });
+    };
+
+    getAllJobs();
+  }, []);
+
+  console.log(recruiterJobs);
+
   return (
-    <View>
-      <Text>CandidateHome</Text>
+    <View style={{ flex: 1, backgroundColor: "white" }}>
+      {recruiterJobs.length > 0 ? (
+        <View>
+          {recruiterJobs.map((jobPostings, index) => {
+            const { id, ...jobs } = jobPostings;
+
+            return <JobsCard key={index} recruiterJobs={jobs} />;
+          })}
+        </View>
+      ) : null}
     </View>
   );
 }
