@@ -92,7 +92,7 @@ export default function RegisterRecruiter() {
               },
             ]
           );
-          navigation.navigate("Login");
+          navigation.replace("Login");
         })
         .catch((error) => {
           const errorCode = error.code;

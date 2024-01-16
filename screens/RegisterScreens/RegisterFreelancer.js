@@ -94,7 +94,7 @@ export default function RegisterFreelancer() {
               },
             ]
           );
-          navigation.navigate("Login");
+          navigation.replace("Login");
         })
         .catch((error) => {
           const errorMessage = error.message;
