@@ -36,9 +36,9 @@ const LoginScreen = () => {
             const sub = docSnapshot.data();
 
             if (sub.isRecruiter === true) {
-              navigation.navigate("RecruiterDashboard");
+              navigation.replace("RecruiterDashboard");
             } else if (sub.isCandidate === true) {
-              navigation.navigate("CandidateHome");
+              navigation.replace("CandidateHome");
             }
           }
         } catch (error) {

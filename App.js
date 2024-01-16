@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import { SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
+import { SafeAreaView } from "react-native";
 import Navigation from "./Navigation";
 
 export default function App() {
@@ -10,12 +10,3 @@ export default function App() {
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});

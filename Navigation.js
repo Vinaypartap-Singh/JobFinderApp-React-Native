@@ -29,6 +29,7 @@ import { theme } from "./theme";
 import CandidateHome from "./screens/CandidateScreens/CandidateHome";
 import CandidateJobs from "./screens/CandidateScreens/CandidateJobs";
 import CandidateProfile from "./screens/CandidateScreens/CandidateProfile";
+import AddWorkExperience from "./screens/CandidateScreens/AddWorkExperience";
 
 export default function Navigation() {
   const Stack = createNativeStackNavigator();
@@ -190,6 +191,11 @@ export default function Navigation() {
         <Stack.Screen
           name="CandidateHome"
           component={BottomTabsCandidate}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="CandidateExperience"
+          component={AddWorkExperience}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

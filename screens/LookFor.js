@@ -17,7 +17,7 @@ export default function LookFor() {
           What are you looking for ?
         </Text>
         <TouchableOpacity
-          onPress={() => navigation.navigate("RegisterRecruiter")}
+          onPress={() => navigation.replace("RegisterRecruiter")}
           style={{
             backgroundColor: "black",
             paddingHorizontal: 20,
@@ -38,7 +38,7 @@ export default function LookFor() {
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={() => navigation.navigate("RegisterFreelancer")}
+          onPress={() => navigation.replace("RegisterFreelancer")}
           style={{
             paddingHorizontal: 20,
             paddingVertical: 30,

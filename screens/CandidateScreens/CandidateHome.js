@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "../../firebase";
 import JobsCard from "./components/JobsCard";
+import AllRecruiters from "../RecruiterScreens/AllRecruiters";
 
 export default function CandidateHome() {
   const [recruiterJobs, setRecuiterJobs] = useState([]);
@@ -38,6 +39,8 @@ export default function CandidateHome() {
           })}
         </View>
       ) : null}
+
+      <AllRecruiters />
     </View>
   );
 }
