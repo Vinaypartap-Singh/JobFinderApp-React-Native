@@ -19,7 +19,7 @@ export default function HomeRecruiter() {
 
       const realTimeJobUpdate = onSnapshot(docRef, (docSnap) => {
         if (docSnap.exists) {
-          setRecruiterJobs(docSnap.data().jobs);
+          setRecruiterJobs(docSnap.data()?.jobs);
         }
       });
     };
@@ -70,7 +70,7 @@ export default function HomeRecruiter() {
                     borderRadius: 10,
                     paddingHorizontal: 20,
                     gap: 12,
-                    width: 300,
+                    width: 400,
                     margin: 10,
                   }}
                 >

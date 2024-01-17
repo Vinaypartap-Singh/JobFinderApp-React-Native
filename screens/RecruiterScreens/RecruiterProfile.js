@@ -46,7 +46,7 @@ export default function RecruiterProfile() {
 
       const realTimeJobUpdate = onSnapshot(docRef, (docSnap) => {
         if (docSnap.exists) {
-          setRecruiterJobs(docSnap.data().jobs);
+          setRecruiterJobs(docSnap.data()?.jobs);
         }
       });
     };

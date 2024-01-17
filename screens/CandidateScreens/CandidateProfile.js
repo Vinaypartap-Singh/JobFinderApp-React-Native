@@ -15,6 +15,7 @@ import {
 } from "react-native-heroicons/outline";
 import { theme } from "../../theme";
 import { useNavigation } from "@react-navigation/native";
+import { signOut } from "firebase/auth";
 
 export default function CandidateProfile() {
   const navigation = useNavigation();
@@ -59,10 +60,14 @@ export default function CandidateProfile() {
           <View
             style={{ flexDirection: "row", justifyContent: "space-between" }}
           >
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate("Home")}>
               <HomeIcon color={theme.primaryColor} />
             </TouchableOpacity>
-            <TouchableOpacity>
+            <TouchableOpacity
+              onPress={() =>
+                signOut(auth).then(() => navigation.replace("LookingFor"))
+              }
+            >
               <ArrowRightStartOnRectangleIcon color={theme.primaryColor} />
             </TouchableOpacity>
           </View>

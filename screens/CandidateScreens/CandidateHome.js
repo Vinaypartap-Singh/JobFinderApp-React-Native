@@ -1,9 +1,10 @@
-import { View } from "react-native";
+import { ScrollView, Text, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "../../firebase";
 import JobsCard from "./components/JobsCard";
 import AllRecruiters from "../RecruiterScreens/AllRecruiters";
+import CandidateJobsScreen from "./CandidateJobsScreen";
 
 export default function CandidateHome() {
   const [recruiterJobs, setRecuiterJobs] = useState([]);
@@ -26,21 +27,24 @@ export default function CandidateHome() {
     getAllJobs();
   }, []);
 
-  console.log(recruiterJobs);
-
   return (
-    <View style={{ flex: 1, backgroundColor: "white" }}>
+    <ScrollView style={{ flex: 1, backgroundColor: "white" }}>
       {recruiterJobs.length > 0 ? (
-        <View>
+        <View style={{ marginTop: 20 }}>
+          <Text
+            style={{ fontSize: 20, fontWeight: 700, paddingHorizontal: 30 }}
+          >
+            On Going Jobs
+          </Text>
           {recruiterJobs.map((jobPostings, index) => {
             const { id, ...jobs } = jobPostings;
 
-            return <JobsCard key={index} recruiterJobs={jobs} />;
+            return <CandidateJobsScreen key={index} recruiterJobs={jobs} />;
           })}
         </View>
       ) : null}
 
       <AllRecruiters />
-    </View>
+    </ScrollView>
   );
 }
