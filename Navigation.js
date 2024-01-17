@@ -30,6 +30,7 @@ import CandidateHome from "./screens/CandidateScreens/CandidateHome";
 import CandidateJobs from "./screens/CandidateScreens/CandidateJobs";
 import CandidateProfile from "./screens/CandidateScreens/CandidateProfile";
 import AddWorkExperience from "./screens/CandidateScreens/AddWorkExperience";
+import AddProject from "./screens/CandidateScreens/AddProject";
 
 export default function Navigation() {
   const Stack = createNativeStackNavigator();
@@ -196,6 +197,11 @@ export default function Navigation() {
         <Stack.Screen
           name="CandidateExperience"
           component={AddWorkExperience}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="AddProject"
+          component={AddProject}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

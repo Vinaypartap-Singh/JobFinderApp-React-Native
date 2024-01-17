@@ -86,7 +86,79 @@ export default function CandidateProfile() {
             >
               {/* Work Experience Section */}
               {profile.workExperience ? (
-                <View></View>
+                <View>
+                  <Text
+                    style={{ fontSize: 20, fontWeight: 600, marginBottom: 20 }}
+                  >
+                    Work Experience
+                  </Text>
+                  <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                    {profile.workExperience.map((data, index) => {
+                      return (
+                        <View
+                          key={index}
+                          style={{
+                            gap: 10,
+                            backgroundColor: theme.extraLightBackground,
+                            padding: 20,
+                            borderRadius: 10,
+                            width: 380,
+                          }}
+                        >
+                          <View
+                            style={{
+                              flexDirection: "row",
+                              alignItems: "center",
+                              justifyContent: "space-between",
+                            }}
+                          >
+                            <Text style={{ width: "70%" }}>
+                              Company: {data.companyName}
+                            </Text>
+                            <Text style={{ width: "30%", textAlign: "right" }}>
+                              {data.location}
+                            </Text>
+                          </View>
+
+                          <View
+                            style={{
+                              flexDirection: "row",
+                              alignItems: "center",
+                              justifyContent: "space-between",
+                            }}
+                          >
+                            <Text style={{ width: "50%" }}>
+                              Joined On: {data.dateOfEmployment}
+                            </Text>
+                            <Text style={{ width: "50%", textAlign: "right" }}>
+                              {data.employmentType}
+                            </Text>
+                          </View>
+
+                          <View
+                            style={{
+                              flexDirection: "row",
+                              alignItems: "center",
+                              justifyContent: "space-between",
+                            }}
+                          >
+                            <Text style={{ width: "50%" }}>
+                              Role: {data.jobTitle}
+                            </Text>
+                            <Text style={{ width: "50%", textAlign: "right" }}>
+                              {data.industry}
+                            </Text>
+                          </View>
+                          <Text style={{ lineHeight: 25 }}>
+                            Skills: {data.skillsUsed}
+                          </Text>
+                          <Text>Responsibilities: {data.Responsibilities}</Text>
+                          <Text>Reason Of Leaving: {data.reasonOfLeaving}</Text>
+                        </View>
+                      );
+                    })}
+                  </ScrollView>
+                </View>
               ) : (
                 <View style={{ gap: 20 }}>
                   <Text
@@ -134,6 +206,7 @@ export default function CandidateProfile() {
                       No Project(s) Mentioned
                     </Text>
                     <TouchableOpacity
+                      onPress={() => navigation.navigate("AddProject")}
                       style={{
                         backgroundColor: theme.highlightColor,
                         paddingVertical: 20,

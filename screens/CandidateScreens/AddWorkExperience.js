@@ -18,9 +18,12 @@ import {
 } from "react-native-heroicons/outline";
 import { useNavigation } from "@react-navigation/native";
 import { theme } from "../../theme";
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import { auth, db } from "../../firebase";
 
 export default function AddWorkExperience() {
   const navigation = useNavigation();
+  const userId = auth.currentUser.uid;
   const [jobTitle, setJobTitle] = useState("");
   const [companyName, setCompanyName] = useState("");
   const [dateOfEmployment, setDateOfEmployment] = useState("");
@@ -31,7 +34,19 @@ export default function AddWorkExperience() {
   const [reasonOfLeaving, setReasonOfLeaving] = useState("");
   const [industry, setIndustry] = useState("");
 
-  const addExperience = () => {
+  const workExperience = {
+    jobTitle: jobTitle,
+    companyName: companyName,
+    dateOfEmployment: dateOfEmployment,
+    location: location,
+    Responsibilities: Responsibilities,
+    skillsUsed: skillsUsed,
+    employmentType: employmentType,
+    reasonOfLeaving: reasonOfLeaving,
+    industry: industry,
+  };
+
+  const addExperience = async () => {
     if (
       jobTitle === "" ||
       companyName === "" ||
@@ -58,6 +73,34 @@ export default function AddWorkExperience() {
         ]
       );
     } else {
+      const userDocRef = doc(db, "users", `${userId}`);
+      const getUserDoc = await getDoc(userDocRef);
+      const existingExperience = getUserDoc.data()?.workExperience || [];
+
+      existingExperience.push(workExperience);
+
+      await setDoc(
+        userDocRef,
+        {
+          workExperience: existingExperience,
+        },
+        { merge: true }
+      );
+
+      Alert.alert(
+        "Work Experience Added",
+        "Your work experience has been added successfully.",
+        [
+          {
+            text: "Ok",
+            style: "default",
+          },
+          {
+            text: "Cancel",
+            style: "cancel",
+          },
+        ]
+      );
     }
   };
   return (
