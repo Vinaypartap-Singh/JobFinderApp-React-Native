@@ -4,8 +4,9 @@ import {
   ScrollView,
   TouchableOpacity,
   TextInput,
+  Alert,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import {
   ChevronLeftIcon,
   BriefcaseIcon,
@@ -21,9 +22,86 @@ import {
 } from "react-native-heroicons/outline";
 import { theme } from "../../theme";
 import { useNavigation } from "@react-navigation/native";
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import { auth, db } from "../../firebase";
 
 export default function AddProject() {
   const navigation = useNavigation();
+  const userId = auth.currentUser.uid;
+  const [projectTitle, setProjectTitle] = useState("");
+  const [dateOfCompletion, setDateOfCompletion] = useState("");
+  const [projectDescription, setProjectDescription] = useState("");
+  const [role, setRole] = useState("");
+  const [technologyUsed, setTechnologyUsed] = useState("");
+  const [teamSize, setTeamSize] = useState("");
+  const [challangesAndSolution, setChallangesAndSolution] = useState("");
+  const [achievement, setAchievement] = useState("");
+  const [projectURL, setProjectURL] = useState("");
+  const [relevanceOfJobs, setRelevanceOfJobs] = useState("");
+
+  const projectInfo = {
+    projectTitle: projectTitle,
+    dateOfCompletion: dateOfCompletion,
+    projectDescription: projectDescription,
+    role: role,
+    technologyUsed: technologyUsed,
+    teamSize: teamSize,
+    challangesAndSolution: challangesAndSolution,
+    achievement: achievement,
+    projectURL: projectURL,
+    relevanceOfJobs: relevanceOfJobs,
+  };
+
+  const addProjectData = async () => {
+    if (
+      projectTitle === "" ||
+      dateOfCompletion === "" ||
+      projectDescription === "" ||
+      role === "" ||
+      technologyUsed === "" ||
+      teamSize === "" ||
+      challangesAndSolution === "" ||
+      achievement === "" ||
+      projectURL === "" ||
+      relevanceOfJobs === ""
+    ) {
+      Alert.alert(
+        "Invalid Details",
+        "Please fill all the details to continue",
+        [
+          {
+            text: "Ok",
+            style: "default",
+          },
+          {
+            text: "Cancel",
+            style: "cancel",
+          },
+        ]
+      );
+    } else {
+      const userDocRef = doc(db, "users", `${userId}`);
+      const userDocSnap = await getDoc(userDocRef);
+      const existingProjects = userDocSnap.data()?.projects || [];
+
+      existingProjects.push(projectInfo);
+
+      await setDoc(userDocRef, { projects: existingProjects }, { merge: true });
+
+      Alert.alert("Project Added", "Your Project has been added", [
+        {
+          text: "Ok",
+          style: "default",
+        },
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+      ]);
+
+      navigation.navigate("CandidateHome");
+    }
+  };
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
@@ -54,7 +132,11 @@ export default function AddProject() {
           }}
         >
           <BriefcaseIcon size={25} color={"black"} />
-          <TextInput style={{ width: "80%" }} placeholder="Project Title" />
+          <TextInput
+            style={{ width: "80%" }}
+            placeholder="Project Title"
+            onChangeText={(text) => setProjectTitle(text)}
+          />
         </View>
 
         <View
@@ -72,6 +154,7 @@ export default function AddProject() {
           <TextInput
             style={{ width: "80%" }}
             placeholder="Date Of Completion"
+            onChangeText={(text) => setDateOfCompletion(text)}
           />
         </View>
 
@@ -90,6 +173,7 @@ export default function AddProject() {
           <TextInput
             style={{ width: "80%" }}
             placeholder="Project Description"
+            onChangeText={(text) => setProjectDescription(text)}
           />
         </View>
         <View
@@ -104,7 +188,11 @@ export default function AddProject() {
           }}
         >
           <UserIcon size={25} color={"black"} />
-          <TextInput style={{ width: "80%" }} placeholder="Role" />
+          <TextInput
+            style={{ width: "80%" }}
+            placeholder="Role"
+            onChangeText={(text) => setRole(text)}
+          />
         </View>
         <View
           style={{
@@ -118,7 +206,11 @@ export default function AddProject() {
           }}
         >
           <ComputerDesktopIcon size={25} color={"black"} />
-          <TextInput style={{ width: "80%" }} placeholder="Technologies Used" />
+          <TextInput
+            style={{ width: "80%" }}
+            placeholder="Technologies Used"
+            onChangeText={(text) => setTechnologyUsed(text)}
+          />
         </View>
         <View
           style={{
@@ -132,7 +224,11 @@ export default function AddProject() {
           }}
         >
           <UserGroupIcon size={25} color={"black"} />
-          <TextInput style={{ width: "80%" }} placeholder="Team Size" />
+          <TextInput
+            style={{ width: "80%" }}
+            placeholder="Team Size"
+            onChangeText={(text) => setTeamSize(text)}
+          />
         </View>
         <View
           style={{
@@ -149,6 +245,7 @@ export default function AddProject() {
           <TextInput
             style={{ width: "80%" }}
             placeholder="Challanges and Solutions"
+            onChangeText={(text) => setChallangesAndSolution(text)}
           />
         </View>
         <View
@@ -163,7 +260,11 @@ export default function AddProject() {
           }}
         >
           <AcademicCapIcon size={25} color={"black"} />
-          <TextInput style={{ width: "80%" }} placeholder="Achievements" />
+          <TextInput
+            style={{ width: "80%" }}
+            placeholder="Achievements"
+            onChangeText={(text) => setAchievement(text)}
+          />
         </View>
         <View
           style={{
@@ -180,6 +281,7 @@ export default function AddProject() {
           <TextInput
             style={{ width: "80%" }}
             placeholder="Github or Project URL"
+            onChangeText={(text) => setProjectURL(text)}
           />
         </View>
         <View
@@ -194,9 +296,14 @@ export default function AddProject() {
           }}
         >
           <ClipboardDocumentCheckIcon size={25} color={"black"} />
-          <TextInput style={{ width: "80%" }} placeholder="Relevance Of Jobs" />
+          <TextInput
+            style={{ width: "80%" }}
+            placeholder="Relevance Of Jobs"
+            onChangeText={(text) => setRelevanceOfJobs(text)}
+          />
         </View>
         <TouchableOpacity
+          onPress={addProjectData}
           style={{
             backgroundColor: theme.highlightColor,
             paddingVertical: 20,

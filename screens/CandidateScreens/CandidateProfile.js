@@ -194,7 +194,60 @@ export default function CandidateProfile() {
                 style={{ marginTop: 30, borderTopWidth: 1, paddingTop: 20 }}
               >
                 {profile.projects ? (
-                  <View></View>
+                  <View>
+                    <Text
+                      style={{
+                        fontSize: 20,
+                        fontWeight: 600,
+                        marginBottom: 20,
+                      }}
+                    >
+                      Project(s)
+                    </Text>
+
+                    {profile.projects.map((data, index) => {
+                      return (
+                        <View
+                          key={index}
+                          style={{
+                            gap: 10,
+                            borderBottomWidth: 1,
+                            borderColor: theme.textInputColor,
+                            borderRadius: 5,
+                            paddingBottom: 10,
+                          }}
+                        >
+                          <Text>Title: {data.projectTitle}</Text>
+                          <View
+                            style={{
+                              flexDirection: "row",
+                              justifyContent: "space-between",
+                            }}
+                          >
+                            <Text style={{ lineHeight: 22 }}>
+                              Role: {data.role}
+                            </Text>
+                            <Text style={{ lineHeight: 22 }}>
+                              {data.dateOfCompletion}
+                            </Text>
+                          </View>
+                          <Text style={{ lineHeight: 22 }}>
+                            Tech Used: {data.technologyUsed}
+                          </Text>
+                          <Text style={{ lineHeight: 22 }}>
+                            Project Description: {data.projectDescription}
+                          </Text>
+                          <Text style={{ lineHeight: 22 }}>
+                            Challanges and Solutions:{" "}
+                            {data.challangesAndSolution}
+                          </Text>
+                          <Text style={{ lineHeight: 22 }}>
+                            Achievement: {data.achievement}
+                          </Text>
+                        </View>
+                      );
+                    })}
+                  </View>
                 ) : (
                   <View style={{ gap: 20 }}>
                     <Text
