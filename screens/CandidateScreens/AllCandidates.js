@@ -1,14 +1,16 @@
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import React from "react";
 import { theme } from "../../theme";
+import { useNavigation } from "@react-navigation/native";
 
 export default function AllCandidates({ candidateList }) {
+  const navigation = useNavigation();
   return (
     <View>
       {candidateList.map((data, index) => {
         return (
           <TouchableOpacity
-            onPress={() => console.log(data)}
+            onPress={() => navigation.navigate("ViewCandidateProfile", data)}
             key={index}
             style={{
               flexDirection: "row",

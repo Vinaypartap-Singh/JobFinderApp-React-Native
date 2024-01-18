@@ -38,7 +38,8 @@ export default function CandidateCard({ candidateList }) {
       >
         {candidateList.slice(0, 5).map((user, index) => {
           return (
-            <View
+            <TouchableOpacity
+              onPress={() => navigation.navigate("ViewCandidateProfile", user)}
               key={index}
               style={{
                 marginTop: 20,
@@ -68,7 +69,7 @@ export default function CandidateCard({ candidateList }) {
                   {user.candidateRole}
                 </Text>
               </View>
-            </View>
+            </TouchableOpacity>
           );
         })}
       </View>
