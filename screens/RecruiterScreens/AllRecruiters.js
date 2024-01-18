@@ -1,10 +1,12 @@
-import { View, Text, ScrollView, Image } from "react-native";
+import { View, Text, ScrollView, Image, TouchableOpacity } from "react-native";
 import React, { useEffect, useState } from "react";
 import { collection, doc, onSnapshot, query, where } from "firebase/firestore";
 import { db } from "../../firebase";
 import { theme } from "../../theme";
+import { useNavigation } from "@react-navigation/native";
 
 export default function AllRecruiters() {
+  const navigation = useNavigation();
   const [recruiter, setRecruiter] = useState([]);
   useEffect(() => {
     const getAllRecruiters = async () => {
@@ -34,7 +36,8 @@ export default function AllRecruiters() {
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         {recruiter.map((data, index) => {
           return (
-            <View
+            <TouchableOpacity
+              onPress={() => navigation.navigate("ViewRecruiterProfile", data)}
               key={index}
               style={{
                 backgroundColor: theme.extraLightBackground,
@@ -61,7 +64,7 @@ export default function AllRecruiters() {
                   {data.recruiterRole}
                 </Text>
               </View>
-            </View>
+            </TouchableOpacity>
           );
         })}
       </ScrollView>

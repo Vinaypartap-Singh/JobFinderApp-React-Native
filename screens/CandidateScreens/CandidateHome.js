@@ -28,7 +28,10 @@ export default function CandidateHome() {
   }, []);
 
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: "white" }}>
+    <ScrollView
+      style={{ flex: 1, backgroundColor: "white" }}
+      showsVerticalScrollIndicator={false}
+    >
       {recruiterJobs.length > 0 ? (
         <View style={{ marginTop: 20 }}>
           <Text
