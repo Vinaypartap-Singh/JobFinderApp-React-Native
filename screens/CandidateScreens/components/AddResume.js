@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {
   Alert,
+  Dimensions,
   Image,
   ScrollView,
   Text,
@@ -11,14 +12,18 @@ import { ChevronLeftIcon } from "react-native-heroicons/outline";
 import { theme } from "../../../theme";
 import * as ImagePicker from "expo-image-picker";
 import * as DocumentPicker from "expo-document-picker";
-import { storage } from "../../../firebase";
-import { ref, uploadBytes } from "firebase/storage";
+import { auth, db, storage } from "../../../firebase";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import { WebView } from "react-native-webview";
+import Pdf from "react-native-pdf";
 
 export default function AddResume() {
-  console.log(storage.ref);
   const [hasGalleryPermission, setHasGalleryPermission] = useState(null);
   const [image, setImage] = useState(null);
   const [pickedDocument, setPickedDocument] = useState(null);
+  const [resumeExist, setResumeExist] = useState("");
+  const [profileInfo, setProfileInfo] = useState(null);
 
   useEffect(() => {
     // Request permission to pick images
@@ -27,6 +32,22 @@ export default function AddResume() {
         await ImagePicker.requestMediaLibraryPermissionsAsync();
       setHasGalleryPermission(galleryStatus.status === "granted");
     })();
+
+    const getExistingResume = async () => {
+      try {
+        const userId = auth.currentUser.uid;
+        const userDocRef = doc(db, "users", userId);
+        const userDocSnap = await getDoc(userDocRef);
+
+        if (userDocSnap.exists()) {
+          const resumeURL = userDocSnap.data()?.resumeURL;
+        }
+      } catch (error) {
+        console.error("Error fetching existing resume:", error);
+      }
+    };
+
+    getExistingResume();
   }, []);
 
   const imagePicker = async () => {
@@ -79,6 +100,24 @@ export default function AddResume() {
 
       uploadBytes(storageRef, blob);
 
+      const downloadURL = await getDownloadURL(storageRef);
+
+      const userId = auth.currentUser.uid;
+      const userDocRef = doc(db, "users", `${userId}`);
+      const userDocSnap = await getDoc(userDocRef);
+
+      setResumeExist(userDocSnap.data()?.resumeURL);
+
+      if (userDocSnap.exists()) {
+        await setDoc(
+          userDocRef,
+          {
+            resumeURL: downloadURL,
+          },
+          { merge: true }
+        );
+      }
+
       Alert.alert(
         "Document Uploaded",
         "The document has been successfully uploaded to Firebase Storage."
@@ -98,17 +137,47 @@ export default function AddResume() {
       }}
     >
       <ScrollView showsVerticalScrollIndicator={false}>
-        {image ? (
+        {resumeExist !== "" ? (
           <View style={{ flex: 1, backgroundColor: "white" }}>
             <Text
               style={{ fontSize: 20, fontWeight: 700, paddingHorizontal: 30 }}
             >
               Your Resume
             </Text>
-            <Image
-              source={{ uri: image }}
-              style={{ flex: 1 / 2, aspectRatio: 4 / 3 }}
+            <Pdf
+              source={resumeExist}
+              onLoadComplete={(numberOfPages, filePath) => {
+                console.log(`Number of pages: ${numberOfPages}`);
+              }}
+              onPageChanged={(page, numberOfPages) => {
+                console.log(`Current page: ${page}`);
+              }}
+              onError={(error) => {
+                console.log(error);
+              }}
+              onPressLink={(uri) => {
+                console.log(`Link pressed: ${uri}`);
+              }}
+              style={{
+                flex: 1,
+                width: Dimensions.get("window").width,
+                height: Dimensions.get("window").height,
+              }}
             />
+
+            <TouchableOpacity
+              style={{
+                backgroundColor: theme.highlightColor,
+                paddingVertical: 20,
+                borderRadius: 10,
+              }}
+            >
+              <Text
+                style={{ color: "white", textAlign: "center", fontSize: 16 }}
+              >
+                Add New Resume
+              </Text>
+            </TouchableOpacity>
           </View>
         ) : (
           <View style={{ flex: 1, backgroundColor: "white" }}>
