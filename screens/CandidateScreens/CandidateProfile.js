@@ -98,6 +98,48 @@ export default function CandidateProfile() {
                   </Text>
                 </View>
 
+                {/* Work Experience */}
+
+                <View>
+                  {profile.resume ? (
+                      <View></View>
+                  ) : (
+                      <View  style={{
+                        marginTop: 20,
+                        borderTopWidth: 1,
+                        paddingTop: 20,
+                        gap: 20
+                      }}>
+                        <Text
+                            style={{
+                              fontSize: 20,
+                              fontWeight: 600,
+                            }}
+                        >
+                         No Resume Found
+                        </Text>
+                        <TouchableOpacity
+                            onPress={() => navigation.navigate("CandidateResume")}
+                            style={{
+                              backgroundColor: theme.highlightColor,
+                              paddingVertical: 20,
+                              borderRadius: 10,
+                            }}
+                        >
+                          <Text
+                              style={{
+                                color: "white",
+                                textAlign: "center",
+                                fontSize: 16,
+                              }}
+                          >
+                            Add Resume
+                          </Text>
+                        </TouchableOpacity>
+                      </View>
+                  )}
+                </View>
+
                 {/* Work Experience and Projects Section */}
 
                 <View
