@@ -104,7 +104,13 @@ export default function UpdateProfilePicture() {
         <ChevronLeftIcon color={theme.primaryColor} />
       </TouchableOpacity>
       {profilePictureURL ? (
-        <View>
+        <View
+          style={{
+            alignItems: "center",
+            justifyContent: "center",
+            marginTop: 20,
+          }}
+        >
           <Image
             source={{ uri: profilePictureURL }}
             style={{ width: 120, height: 120, borderRadius: 500 }}
