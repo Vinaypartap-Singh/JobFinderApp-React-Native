@@ -168,6 +168,7 @@ export default function RecruiterProfile() {
                   }}
                 >
                   <TouchableOpacity
+                    onPress={() => navigation.navigate("UpdateProfile")}
                     style={{
                       paddingVertical: 10,
                       borderWidth: 1,
