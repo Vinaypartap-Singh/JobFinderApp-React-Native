@@ -35,6 +35,8 @@ import ViewCandidateProfile from "./screens/RecruiterScreens/ViewCandidateProfil
 import ViewRecruiterProfile from "./screens/CandidateScreens/ViewRecruiterProfile";
 import AddResume from "./screens/CandidateScreens/components/AddResume";
 import UpdateProfilePicture from "./screens/RecruiterScreens/components/UpdateProfilePicture";
+import UpdateProfile from "./screens/RecruiterScreens/components/UpdateProfile";
+import UpdateCandidateProfile from "./screens/CandidateScreens/components/UpdateCandidateProfile";
 
 export default function Navigation() {
   const Stack = createNativeStackNavigator();
@@ -226,6 +228,16 @@ export default function Navigation() {
         <Stack.Screen
           name="UpdateRecruiterProfile"
           component={UpdateProfilePicture}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="UpdateProfile"
+          component={UpdateProfile}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="UpdateCandidateProfile"
+          component={UpdateCandidateProfile}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>
