@@ -178,6 +178,9 @@ export default function RecruiterProfile() {
                     <Text style={{ textAlign: "center" }}>Update Profile</Text>
                   </TouchableOpacity>
                   <TouchableOpacity
+                    onPress={() =>
+                      navigation.navigate("UpdateRecruiterProfile")
+                    }
                     style={{
                       paddingVertical: 10,
                       borderWidth: 1,
