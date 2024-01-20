@@ -1,92 +1,99 @@
-import React, { useEffect, useState } from "react";
 import {
-  Alert,
-  Dimensions,
-  Image,
-  ScrollView,
+  View,
   Text,
   TouchableOpacity,
-  View,
+  Alert,
+  Linking,
+  Button,
 } from "react-native";
-import { ChevronLeftIcon } from "react-native-heroicons/outline";
+import React, { useEffect, useState } from "react";
 import { theme } from "../../../theme";
-import * as ImagePicker from "expo-image-picker";
 import * as DocumentPicker from "expo-document-picker";
 import { auth, db, storage } from "../../../firebase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { doc, getDoc, setDoc } from "firebase/firestore";
-import { WebView } from "react-native-webview";
-import Pdf from "react-native-pdf";
+import { ChevronLeftIcon } from "react-native-heroicons/outline";
+import { useNavigation } from "@react-navigation/native";
 
 export default function AddResume() {
-  const [hasGalleryPermission, setHasGalleryPermission] = useState(null);
-  const [image, setImage] = useState(null);
-  const [pickedDocument, setPickedDocument] = useState(null);
-  const [resumeExist, setResumeExist] = useState("");
-  const [profileInfo, setProfileInfo] = useState(null);
+  const navigation = useNavigation();
+  const [selectedDocument, setSelectedDocument] = useState(null);
+  const [existingResume, setExistingResume] = useState(false);
+  const [existingResumeURL, setExistingResumeURL] = useState("");
+  const currentUser = auth.currentUser.uid;
 
   useEffect(() => {
-    // Request permission to pick images
-    (async () => {
-      const galleryStatus =
-        await ImagePicker.requestMediaLibraryPermissionsAsync();
-      setHasGalleryPermission(galleryStatus.status === "granted");
-    })();
+    const getExistingResumeInfo = async () => {
+      const userDocRef = doc(db, "users", `${currentUser}`);
+      const userDocSnap = await getDoc(userDocRef);
 
-    const getExistingResume = async () => {
-      try {
-        const userId = auth.currentUser.uid;
-        const userDocRef = doc(db, "users", userId);
-        const userDocSnap = await getDoc(userDocRef);
-
-        if (userDocSnap.exists()) {
-          const resumeURL = userDocSnap.data()?.resumeURL;
+      if (userDocSnap.exists()) {
+        if (userDocSnap.data()?.resumeURL) {
+          setExistingResume(true);
+          setExistingResumeURL(userDocSnap.data().resumeURL);
+          Alert.alert(
+            "Exising Resume",
+            "We Have found an existing resume in your account.",
+            [
+              {
+                text: "OK",
+                style: "default",
+              },
+              {
+                text: "Cancel",
+                style: "cancel",
+              },
+            ]
+          );
+        } else {
+          setExistingResume(false);
+          Alert.alert(
+            "Upload Resume",
+            "You can choose a pdf file to add your resume.",
+            [
+              {
+                text: "OK",
+                style: "default",
+              },
+              {
+                text: "Cancel",
+                style: "cancel",
+              },
+            ]
+          );
         }
-      } catch (error) {
-        console.error("Error fetching existing resume:", error);
       }
     };
 
-    getExistingResume();
+    getExistingResumeInfo();
   }, []);
 
-  const imagePicker = async () => {
-    // Check if permission is granted before attempting to pick an image
-    if (hasGalleryPermission !== true) {
-      Alert.alert(
-        "Permission Denied",
-        "Please grant access to your gallery to pick an image."
-      );
-      return;
-    }
-
+  const pickDocument = async () => {
     try {
-      const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        allowsEditing: true,
-        aspect: [4, 3],
-        quality: 1,
+      const result = await DocumentPicker.getDocumentAsync({
+        type: "application/pdf",
       });
 
-      if (!result.cancelled) {
-        setImage(result.assets[0].uri);
-        console.log(result.assets[0].uri);
+      if (result) {
+        setSelectedDocument(result);
+        const documentName = selectedDocument.assets[0].name;
+        const documentPdf = selectedDocument.assets[0].uri;
+
+        await uploadDocumentToFirebase(documentPdf, documentName);
+      } else {
+        setSelectedDocument(null);
       }
     } catch (error) {
-      console.log("Error picking image:", error);
-    }
-  };
-
-  const pickDocument = async () => {
-    let result = await DocumentPicker.getDocumentAsync({});
-    if (result && result.assets && result.assets.length > 0) {
-      setPickedDocument(result);
-      await uploadDocumentToFirebase(
-        result.assets[0].uri,
-        result.assets[0].name
-      );
-    } else {
-      Alert.alert("Document not picked", "Please select a document.");
+      Alert.alert("Error", error, [
+        {
+          text: "OK",
+          style: "default",
+        },
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+      ]);
     }
   };
 
@@ -105,8 +112,6 @@ export default function AddResume() {
       const userId = auth.currentUser.uid;
       const userDocRef = doc(db, "users", `${userId}`);
       const userDocSnap = await getDoc(userDocRef);
-
-      setResumeExist(userDocSnap.data()?.resumeURL);
 
       if (userDocSnap.exists()) {
         await setDoc(
@@ -127,85 +132,71 @@ export default function AddResume() {
     }
   };
 
+  const openURLInBrowser = () => {
+    // Replace 'https://example.com' with the URL you want to open
+    const url = existingResumeURL;
+
+    Linking.openURL(url)
+      .then(() => console.log(`Opened URL: ${url}`))
+      .catch((err) => console.error("Error opening URL:", err));
+  };
+
   return (
-    <View
-      style={{
-        flex: 1,
-        backgroundColor: "white",
-        paddingHorizontal: 20,
-        paddingTop: 20,
-      }}
-    >
-      <ScrollView showsVerticalScrollIndicator={false}>
-        {resumeExist !== "" ? (
-          <View style={{ flex: 1, backgroundColor: "white" }}>
+    <View style={{ flex: 1, backgroundColor: "white" }}>
+      <View style={{ paddingHorizontal: 20, marginVertical: 20 }}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <ChevronLeftIcon color={theme.primaryColor} />
+        </TouchableOpacity>
+      </View>
+      {existingResume ? (
+        <View style={{ paddingHorizontal: 20, gap: 20, marginTop: 10 }}>
+          <Text style={{ fontSize: 20, fontWeight: 700 }}>
+            Resume Already Exsit
+          </Text>
+          <Button title="Open URL in Browser" onPress={openURLInBrowser} />
+
+          <TouchableOpacity
+            onPress={pickDocument}
+            style={{
+              backgroundColor: theme.highlightColor,
+              paddingVertical: 20,
+              borderRadius: 10,
+            }}
+          >
             <Text
-              style={{ fontSize: 20, fontWeight: 700, paddingHorizontal: 30 }}
+              style={{
+                color: "white",
+                textAlign: "center",
+                fontSize: 16,
+              }}
             >
-              Your Resume
+              Add New Resume
             </Text>
-            <Pdf
-              source={resumeExist}
-              onLoadComplete={(numberOfPages, filePath) => {
-                console.log(`Number of pages: ${numberOfPages}`);
-              }}
-              onPageChanged={(page, numberOfPages) => {
-                console.log(`Current page: ${page}`);
-              }}
-              onError={(error) => {
-                console.log(error);
-              }}
-              onPressLink={(uri) => {
-                console.log(`Link pressed: ${uri}`);
-              }}
+          </TouchableOpacity>
+        </View>
+      ) : (
+        <View style={{ paddingHorizontal: 20, gap: 20, marginTop: 10 }}>
+          <Text style={{ fontSize: 20, fontWeight: 700 }}>Add Resume</Text>
+          <TouchableOpacity
+            onPress={pickDocument}
+            style={{
+              backgroundColor: theme.highlightColor,
+              paddingVertical: 20,
+              borderRadius: 10,
+            }}
+          >
+            <Text
               style={{
-                flex: 1,
-                width: Dimensions.get("window").width,
-                height: Dimensions.get("window").height,
-              }}
-            />
-
-            <TouchableOpacity
-              style={{
-                backgroundColor: theme.highlightColor,
-                paddingVertical: 20,
-                borderRadius: 10,
+                color: "white",
+                textAlign: "center",
+                fontSize: 16,
               }}
             >
-              <Text
-                style={{ color: "white", textAlign: "center", fontSize: 16 }}
-              >
-                Add New Resume
-              </Text>
-            </TouchableOpacity>
-          </View>
-        ) : (
-          <View style={{ flex: 1, backgroundColor: "white" }}>
-            <View>
-              <TouchableOpacity>
-                <ChevronLeftIcon color={theme.primaryColor} />
-              </TouchableOpacity>
-            </View>
-
-            <View style={{ marginTop: 30 }}>
-              <TouchableOpacity
-                onPress={() => pickDocument()}
-                style={{
-                  backgroundColor: theme.highlightColor,
-                  paddingVertical: 20,
-                  borderRadius: 10,
-                }}
-              >
-                <Text
-                  style={{ color: "white", textAlign: "center", fontSize: 16 }}
-                >
-                  Pick Resume
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        )}
-      </ScrollView>
+              Add Resume
+            </Text>
+          </TouchableOpacity>
+        </View>
+      )}
     </View>
   );
 }

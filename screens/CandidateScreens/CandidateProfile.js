@@ -5,6 +5,8 @@ import {
   ScrollView,
   Image,
   ActivityIndicator,
+  Button,
+  Linking,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { doc, getDoc } from "firebase/firestore";
@@ -22,6 +24,8 @@ export default function CandidateProfile() {
   const uid = auth.currentUser.uid;
   const [profile, setProfile] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [existingResume, setExistingResume] = useState(false);
+  const [resumeURL, setResumeURL] = useState(null);
 
   useEffect(() => {
     setLoading(true);
@@ -32,12 +36,42 @@ export default function CandidateProfile() {
 
       if (profile.exists()) {
         setProfile(profile.data());
+        if (profile.data()?.resumeURL) {
+          setResumeURL(profile.data()?.resumeURL);
+        } else {
+          setResumeURL(null);
+        }
         setLoading(false);
+      }
+    };
+
+    const getExistingResume = async () => {
+      const userDocRef = doc(db, "users", `${uid}`);
+
+      const userDocSnap = await getDoc(userDocRef);
+
+      if (userDocSnap.exists()) {
+        if (userDocSnap.data()?.resumeURL) {
+          setExistingResume(true);
+          setResumeURL(userDocSnap.data()?.resumeURL);
+          setLoading(false);
+        } else {
+          setExistingResume(false);
+        }
       }
     };
 
     getProfile();
   }, []);
+
+  const openURLInBrowser = () => {
+    // Replace 'https://example.com' with the URL you want to open
+    const url = resumeURL;
+
+    Linking.openURL(url)
+      .then(() => console.log(`Opened URL: ${url}`))
+      .catch((err) => console.error("Error opening URL:", err));
+  };
 
   return (
     <View style={{ flex: 1, backgroundColor: "white" }}>
@@ -101,42 +135,83 @@ export default function CandidateProfile() {
                 {/* Work Experience */}
 
                 <View>
-                  {profile.resume ? (
-                      <View></View>
+                  {profile.resumeURL ? (
+                    <View
+                      style={{
+                        paddingHorizontal: 20,
+                        gap: 20,
+                        marginTop: 10,
+                        borderTopWidth: 1,
+                        paddingTop: 20,
+                      }}
+                    >
+                      <Text style={{ fontSize: 20, fontWeight: 700 }}>
+                        Resume Already Exsit
+                      </Text>
+                      <Button
+                        onPress={openURLInBrowser}
+                        title="Open URL in Browser"
+                      />
+
+                      <TouchableOpacity
+                        onPress={() =>
+                          navigation.navigate("AddCandidateResume")
+                        }
+                        style={{
+                          backgroundColor: theme.highlightColor,
+                          paddingVertical: 20,
+                          borderRadius: 10,
+                        }}
+                      >
+                        <Text
+                          style={{
+                            color: "white",
+                            textAlign: "center",
+                            fontSize: 16,
+                          }}
+                        >
+                          Add New Resume
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
                   ) : (
-                      <View  style={{
+                    <View
+                      style={{
                         marginTop: 20,
                         borderTopWidth: 1,
                         paddingTop: 20,
-                        gap: 20
-                      }}>
+                        gap: 20,
+                      }}
+                    >
+                      <Text
+                        style={{
+                          fontSize: 20,
+                          fontWeight: 600,
+                        }}
+                      >
+                        No Resume Found
+                      </Text>
+                      <TouchableOpacity
+                        onPress={() =>
+                          navigation.navigate("AddCandidateResume")
+                        }
+                        style={{
+                          backgroundColor: theme.highlightColor,
+                          paddingVertical: 20,
+                          borderRadius: 10,
+                        }}
+                      >
                         <Text
-                            style={{
-                              fontSize: 20,
-                              fontWeight: 600,
-                            }}
+                          style={{
+                            color: "white",
+                            textAlign: "center",
+                            fontSize: 16,
+                          }}
                         >
-                         No Resume Found
+                          Add Resume
                         </Text>
-                        <TouchableOpacity
-                            onPress={() => navigation.navigate("CandidateResume")}
-                            style={{
-                              backgroundColor: theme.highlightColor,
-                              paddingVertical: 20,
-                              borderRadius: 10,
-                            }}
-                        >
-                          <Text
-                              style={{
-                                color: "white",
-                                textAlign: "center",
-                                fontSize: 16,
-                              }}
-                          >
-                            Add Resume
-                          </Text>
-                        </TouchableOpacity>
-                      </View>
+                      </TouchableOpacity>
+                    </View>
                   )}
                 </View>
 

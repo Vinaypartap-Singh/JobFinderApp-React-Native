@@ -217,7 +217,11 @@ export default function Navigation() {
           component={ViewRecruiterProfile}
           options={{ headerShown: false }}
         />
-          <Stack.Screen name={"CandidateResume"} component={AddResume} options={{headerShown:false}} />
+        <Stack.Screen
+          name="AddCandidateResume"
+          component={AddResume}
+          options={{ headerShown: false }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
