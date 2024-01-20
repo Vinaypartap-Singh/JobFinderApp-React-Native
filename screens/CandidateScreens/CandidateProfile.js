@@ -9,7 +9,7 @@ import {
   Linking,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, onSnapshot } from "firebase/firestore";
 import { auth, db } from "../../firebase";
 import {
   HomeIcon,
@@ -34,15 +34,17 @@ export default function CandidateProfile() {
 
       const profile = await getDoc(profileRef);
 
-      if (profile.exists()) {
-        setProfile(profile.data());
-        if (profile.data()?.resumeURL) {
-          setResumeURL(profile.data()?.resumeURL);
-        } else {
-          setResumeURL(null);
+      const realTimeJobUpdate = onSnapshot(profileRef, (docSnap) => {
+        if (docSnap.exists()) {
+          setProfile(profile.data());
+          if (profile.data()?.resumeURL) {
+            setResumeURL(profile.data()?.resumeURL);
+          } else {
+            setResumeURL(null);
+          }
         }
         setLoading(false);
-      }
+      });
     };
 
     const getExistingResume = async () => {
@@ -127,9 +129,53 @@ export default function CandidateProfile() {
                   <Text style={{ fontWeight: 600, fontSize: 16 }}>
                     {profile.candidateRole} in {profile.address}
                   </Text>
-                  <Text style={{ lineHeight: 30, fontWeight: 600 }}>
+                  <Text
+                    style={{
+                      lineHeight: 30,
+                      fontWeight: 600,
+                    }}
+                  >
                     Skills: {profile.skills}
                   </Text>
+
+                  <View
+                    style={{
+                      width: "100%",
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <TouchableOpacity
+                      onPress={() =>
+                        navigation.navigate("UpdateCandidateProfile")
+                      }
+                      style={{
+                        paddingVertical: 10,
+                        borderWidth: 1,
+                        borderRadius: 5,
+                        width: "48%",
+                      }}
+                    >
+                      <Text style={{ textAlign: "center" }}>
+                        Update Profile
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={() =>
+                        navigation.navigate("UpdateRecruiterProfile")
+                      }
+                      style={{
+                        paddingVertical: 10,
+                        borderWidth: 1,
+                        borderRadius: 5,
+                        width: "48%",
+                      }}
+                    >
+                      <Text style={{ textAlign: "center" }}>
+                        Update Profile Image
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
                 </View>
 
                 {/* Work Experience */}
@@ -145,8 +191,14 @@ export default function CandidateProfile() {
                         paddingTop: 20,
                       }}
                     >
-                      <Text style={{ fontSize: 20, fontWeight: 700 }}>
-                        Resume Already Exsit
+                      <Text
+                        style={{
+                          fontSize: 20,
+                          fontWeight: 700,
+                          textAlign: "center",
+                        }}
+                      >
+                        Resume Already Exist
                       </Text>
                       <Button
                         onPress={openURLInBrowser}
@@ -170,7 +222,7 @@ export default function CandidateProfile() {
                             fontSize: 16,
                           }}
                         >
-                          Add New Resume
+                          Update Resume
                         </Text>
                       </TouchableOpacity>
                     </View>
