@@ -1,4 +1,11 @@
-import { View, Text, ScrollView, ActivityIndicator } from "react-native";
+import {
+  View,
+  Text,
+  ScrollView,
+  ActivityIndicator,
+  NativeModules,
+  Platform,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { db } from "../../firebase";
@@ -6,6 +13,7 @@ import CandidateCard from "../../components/CandidateCard";
 import AllCandidates from "../CandidateScreens/AllCandidates";
 
 export default function ViewCandidate() {
+  const { StatusBarManager } = NativeModules;
   const [candidateList, setCandidateList] = useState([]);
 
   useEffect(() => {
@@ -31,7 +39,8 @@ export default function ViewCandidate() {
         flex: 1,
         backgroundColor: "white",
         paddingHorizontal: 20,
-        paddingTop: 20,
+        paddingTop:
+          Platform.OS === "android" ? StatusBarManager.HEIGHT + 20 : 0,
       }}
     >
       {candidateList.length > 0 ? (

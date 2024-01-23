@@ -5,6 +5,8 @@ import {
   TextInput,
   TouchableOpacity,
   Alert,
+  NativeModules,
+  Platform,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { theme } from "../../theme";
@@ -20,6 +22,7 @@ import {
 import { useNavigation } from "@react-navigation/native";
 
 export default function AddJob() {
+  const { StatusBarManager } = NativeModules;
   const navigation = useNavigation();
   const [jobTitle, setJobTitle] = useState("");
   const [jobDescription, setJobDescription] = useState("");
@@ -114,7 +117,8 @@ export default function AddJob() {
         flex: 1,
         backgroundColor: "white",
         paddingHorizontal: 20,
-        paddingVertical: 10,
+        paddingTop:
+          Platform.OS === "android" ? StatusBarManager.HEIGHT + 20 : 0,
       }}
     >
       <View>
@@ -314,7 +318,9 @@ export default function AddJob() {
         </Text>
       </TouchableOpacity>
 
-      <View style={{ marginBottom: 50 }}></View>
+      <View
+        style={{ marginBottom: Platform.OS === "android" ? 100 : 50 }}
+      ></View>
     </ScrollView>
   );
 }

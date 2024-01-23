@@ -1,15 +1,32 @@
-import { View, Text, ScrollView, TouchableOpacity, Image } from "react-native";
+import {
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  Image,
+  NativeModules,
+  Platform,
+} from "react-native";
 import React from "react";
 import { ChevronLeftIcon } from "react-native-heroicons/outline";
 import { theme } from "../../theme";
 import { useNavigation } from "@react-navigation/native";
 
 export default function ViewCandidateProfile({ route }) {
+  const { StatusBarManager } = NativeModules;
   const navigation = useNavigation();
   const candidateInfo = route.params;
 
   return (
-    <View style={{ paddingHorizontal: 20, flex: 1, backgroundColor: "white" }}>
+    <View
+      style={{
+        paddingHorizontal: 20,
+        flex: 1,
+        backgroundColor: "white",
+        paddingTop:
+          Platform.OS === "android" ? StatusBarManager.HEIGHT + 20 : 0,
+      }}
+    >
       <TouchableOpacity>
         <ChevronLeftIcon
           color={theme.primaryColor}

@@ -1,4 +1,11 @@
-import { View, Text, ScrollView, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  NativeModules,
+  Platform,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import { collection, doc, onSnapshot, query, where } from "firebase/firestore";
 import { auth, db } from "../../firebase";
@@ -8,6 +15,7 @@ import CandidateCard from "../../components/CandidateCard";
 import { useNavigation } from "@react-navigation/native";
 
 export default function HomeRecruiter() {
+  const { StatusBarManager } = NativeModules;
   const navigation = useNavigation();
   const [recruiterJobs, setRecruiterJobs] = useState([]);
   const [candidateList, setCandidateList] = useState([]);
@@ -50,7 +58,12 @@ export default function HomeRecruiter() {
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
-      style={{ flex: 1, backgroundColor: "white", paddingHorizontal: 20 }}
+      style={{
+        flex: 1,
+        backgroundColor: "white",
+        paddingHorizontal: 20,
+        paddingTop: Platform.OS === "android" ? StatusBarManager.HEIGHT : 0,
+      }}
     >
       {recruiterJobs?.length > 0 ? (
         <View style={{ marginTop: 20 }}>

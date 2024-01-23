@@ -6,6 +6,8 @@ import {
   Image,
   ScrollView,
   Alert,
+  NativeModules,
+  Platform,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { doc, getDoc, onSnapshot, setDoc } from "firebase/firestore";
@@ -20,6 +22,7 @@ import {
 } from "react-native-heroicons/outline";
 
 export default function RecruiterProfile() {
+  const { StatusBarManager } = NativeModules;
   const navigation = useNavigation();
   const userId = auth.currentUser.uid;
   const userEmail = auth.currentUser.email;
@@ -93,7 +96,12 @@ export default function RecruiterProfile() {
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
-      style={{ flex: 1, backgroundColor: "white" }}
+      style={{
+        flex: 1,
+        backgroundColor: "white",
+        paddingTop:
+          Platform.OS === "android" ? StatusBarManager.HEIGHT + 20 : 0,
+      }}
     >
       {loading ? (
         <View
@@ -389,6 +397,10 @@ export default function RecruiterProfile() {
           ) : null}
         </View>
       )}
+
+      <View
+        style={{ marginBottom: Platform.OS === "android" ? 100 : 50 }}
+      ></View>
     </ScrollView>
   );
 }
