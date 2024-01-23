@@ -1,4 +1,4 @@
-import { View, Text, ScrollView } from "react-native";
+import { View, Text, ScrollView, Platform, NativeModules } from "react-native";
 import React, { useEffect, useState } from "react";
 import JobsCard from "./components/JobsCard";
 import { collection, onSnapshot } from "firebase/firestore";
@@ -6,6 +6,7 @@ import { db } from "../../firebase";
 import CandidateJobsScreen from "./CandidateJobsScreen";
 
 export default function CandidateJobs() {
+  const { StatusBarManager } = NativeModules;
   const [recruiterJobs, setRecuiterJobs] = useState([]);
   useEffect(() => {
     const getAllJobs = async () => {
@@ -26,11 +27,25 @@ export default function CandidateJobs() {
     getAllJobs();
   }, []);
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: "white" }}>
+    <ScrollView
+      style={{
+        flex: 1,
+        backgroundColor: "white",
+        paddingTop: Platform.OS === "android" ? StatusBarManager.HEIGHT : 0,
+      }}
+    >
       {recruiterJobs.length > 0 ? (
-        <View style={{ marginTop: 20 }}>
+        <View
+          style={{
+            marginTop: 20,
+          }}
+        >
           <Text
-            style={{ fontSize: 20, fontWeight: 700, paddingHorizontal: 30 }}
+            style={{
+              fontSize: 20,
+              fontWeight: 700,
+              paddingHorizontal: 30,
+            }}
           >
             On Going Jobs
           </Text>
@@ -41,6 +56,9 @@ export default function CandidateJobs() {
           })}
         </View>
       ) : null}
+      <View
+        style={{ marginBottom: Platform.OS === "android" ? 100 : 0 }}
+      ></View>
     </ScrollView>
   );
 }

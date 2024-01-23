@@ -1,4 +1,4 @@
-import { ScrollView, Text, View } from "react-native";
+import { NativeModules, Platform, ScrollView, Text, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "../../firebase";
@@ -7,6 +7,7 @@ import AllRecruiters from "../RecruiterScreens/AllRecruiters";
 import CandidateJobsScreen from "./CandidateJobsScreen";
 
 export default function CandidateHome() {
+  const { StatusBarManager } = NativeModules;
   const [recruiterJobs, setRecuiterJobs] = useState([]);
   useEffect(() => {
     const getAllJobs = async () => {
@@ -29,7 +30,11 @@ export default function CandidateHome() {
 
   return (
     <ScrollView
-      style={{ flex: 1, backgroundColor: "white" }}
+      style={{
+        flex: 1,
+        backgroundColor: "white",
+        paddingTop: Platform.OS === "android" ? StatusBarManager.HEIGHT : 0,
+      }}
       showsVerticalScrollIndicator={false}
     >
       {recruiterJobs.length > 0 ? (
@@ -48,6 +53,9 @@ export default function CandidateHome() {
       ) : null}
 
       <AllRecruiters />
+      <View
+        style={{ marginBottom: Platform.OS === "android" ? 100 : 0 }}
+      ></View>
     </ScrollView>
   );
 }

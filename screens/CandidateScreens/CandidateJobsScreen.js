@@ -1,4 +1,10 @@
-import { View, Text, TouchableOpacity, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  Platform,
+} from "react-native";
 import React from "react";
 import { XCircleIcon } from "react-native-heroicons/outline";
 import { theme } from "../../theme";
@@ -66,6 +72,7 @@ export default function CandidateJobsScreen({ recruiterJobs }) {
                   </View>
 
                   <Text
+                    numberOfLines={3}
                     style={{
                       fontWeight: 400,
                       fontSize: 16,

@@ -7,6 +7,8 @@ import {
   ActivityIndicator,
   Button,
   Linking,
+  NativeModules,
+  Platform,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { doc, getDoc, onSnapshot } from "firebase/firestore";
@@ -20,6 +22,7 @@ import { useNavigation } from "@react-navigation/native";
 import { signOut } from "firebase/auth";
 
 export default function CandidateProfile() {
+  const { StatusBarManager } = NativeModules;
   const navigation = useNavigation();
   const uid = auth.currentUser.uid;
   const [profile, setProfile] = useState([]);
@@ -76,7 +79,13 @@ export default function CandidateProfile() {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: "white" }}>
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: "white",
+        paddingTop: Platform.OS === "android" ? StatusBarManager.HEIGHT : 0,
+      }}
+    >
       {loading ? (
         <View
           style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
