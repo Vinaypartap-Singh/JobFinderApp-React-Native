@@ -8,8 +8,10 @@ import {
 import React from "react";
 import { XCircleIcon } from "react-native-heroicons/outline";
 import { theme } from "../../theme";
+import { useNavigation } from "@react-navigation/native";
 
 export default function CandidateJobsScreen({ recruiterJobs }) {
+  const navigation = useNavigation();
   return (
     <View>
       {recruiterJobs ? (
@@ -93,7 +95,7 @@ export default function CandidateJobsScreen({ recruiterJobs }) {
                   </Text>
 
                   <TouchableOpacity
-                    onPress={() => console.log(job)}
+                    onPress={() => navigation.navigate("ViewJobInfo", job)}
                     style={{
                       padding: 10,
                       borderRadius: 5,

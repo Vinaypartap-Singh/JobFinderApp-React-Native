@@ -7,4 +7,5 @@ export const theme = {
   alertIconColor: "#b00000",
   lightColor: "#616161",
   extraLightBackground: "#fafafa",
+  whiteColor: "#ffffff",
 };

@@ -48,6 +48,10 @@ export default function AddJob() {
     applicationIntruction: applicationIntruction,
     contactInformation: contactInformation,
     postedAt: new Date().toISOString(),
+    recruiterInfo: {
+      recruiterId: auth.currentUser.uid,
+      recruiterEmail: auth.currentUser.email,
+    },
   };
 
   const postJob = async () => {
