@@ -20,6 +20,7 @@ import {
   ArrowRightStartOnRectangleIcon,
   XCircleIcon,
 } from "react-native-heroicons/outline";
+import AllCandidates from "../CandidateScreens/AllCandidates";
 
 export default function RecruiterProfile() {
   const { StatusBarManager } = NativeModules;
@@ -279,53 +280,6 @@ export default function RecruiterProfile() {
                           Skills: {data.requiredSkills}
                         </Text>
 
-                        {/* <View
-                          style={{
-                            flexDirection: "row",
-                            alignItems: "center",
-                            justifyContent: "space-between",
-                          }}
-                        >
-                          <Text
-                            style={{
-                              fontWeight: 400,
-                              fontSize: 16,
-                              color: theme.lightColor,
-                            }}
-                          >
-                            Salary: {data.salary}
-                          </Text>
-                          <Text
-                            style={{
-                              fontWeight: 400,
-                              fontSize: 16,
-                              color: theme.lightColor,
-                            }}
-                          >
-                            Deadline: {data.applicationDeadline}
-                          </Text>
-                        </View> */}
-
-                        {/* <Text
-                          style={{
-                            fontWeight: 400,
-                            fontSize: 16,
-                            color: theme.lightColor,
-                          }}
-                        >
-                          Instrctions: {data.applicationIntruction}
-                        </Text> */}
-
-                        {/* <Text
-                          style={{
-                            fontWeight: 400,
-                            fontSize: 16,
-                            color: theme.lightColor,
-                          }}
-                        >
-                          Contact: {data.contactInformation}
-                        </Text> */}
-
                         <TouchableOpacity
                           onPress={() => handleDeleteJob(index)}
                           style={{
@@ -393,6 +347,22 @@ export default function RecruiterProfile() {
                   </TouchableOpacity>
                 </View>
               )}
+
+              <View style={{ marginTop: 20 }}>
+                <Text style={{ fontSize: 20, fontWeight: 600 }}>
+                  Candidates Applied
+                </Text>
+                {userProfile.candidatesApplied ? (
+                  <View style={{ marginTop: 20 }}>
+                    <Text style={{ fontSize: 16, fontWeight: 600 }}>
+                      Profiles
+                    </Text>
+                    <AllCandidates
+                      candidateList={userProfile.candidatesApplied}
+                    />
+                  </View>
+                ) : null}
+              </View>
             </View>
           ) : null}
         </View>
