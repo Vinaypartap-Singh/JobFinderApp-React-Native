@@ -18,12 +18,15 @@ import {
   AcademicCapIcon,
   PlusCircleIcon,
   UserIcon,
+  BookmarkIcon,
+  ClipboardDocumentCheckIcon,
 } from "react-native-heroicons/outline";
 import {
   HomeIcon as HomeSolid,
   AcademicCapIcon as AcademicCapIconSolid,
   PlusCircleIcon as PlusCircleIconSolid,
   UserIcon as UserSolid,
+  ClipboardDocumentCheckIcon as ClipboardDocumentCheckIconSolid,
 } from "react-native-heroicons/solid";
 import { theme } from "./theme";
 import CandidateHome from "./screens/CandidateScreens/CandidateHome";
@@ -38,6 +41,7 @@ import UpdateProfilePicture from "./screens/RecruiterScreens/components/UpdatePr
 import UpdateProfile from "./screens/RecruiterScreens/components/UpdateProfile";
 import UpdateCandidateProfile from "./screens/CandidateScreens/components/UpdateCandidateProfile";
 import ViewJobInfo from "./screens/CandidateScreens/ViewJobInfo";
+import JobsInfo from "./screens/CandidateScreens/JobsInfo";
 
 export default function Navigation() {
   const Stack = createNativeStackNavigator();
@@ -143,6 +147,21 @@ export default function Navigation() {
                 <AcademicCapIconSolid color={theme.primaryColor} />
               ) : (
                 <AcademicCapIcon color={"grey"} />
+              ),
+          }}
+        />
+
+        <Tab.Screen
+          name="AppliedJobs"
+          component={JobsInfo}
+          options={{
+            headerShown: false,
+            title: "Jobs Applied",
+            tabBarIcon: ({ focused }) =>
+              focused ? (
+                <ClipboardDocumentCheckIconSolid color={theme.primaryColor} />
+              ) : (
+                <ClipboardDocumentCheckIcon color={"grey"} />
               ),
           }}
         />
