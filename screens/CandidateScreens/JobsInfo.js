@@ -1,15 +1,7 @@
-import {
-  View,
-  Text,
-  ScrollView,
-  Platform,
-  NativeModules,
-  TouchableOpacity,
-} from "react-native";
+import { View, Text, ScrollView, Platform, NativeModules } from "react-native";
 import React, { useEffect, useState } from "react";
 import { doc, getDoc } from "firebase/firestore";
 import { auth, db } from "../../firebase";
-import { ChevronLeftIcon } from "react-native-heroicons/outline";
 import { theme } from "../../theme";
 
 export default function JobsInfo() {
