@@ -8,26 +8,120 @@ import {
   NativeModules,
   Alert,
 } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { theme } from "../../theme";
 import { ChevronLeftIcon } from "react-native-heroicons/outline";
 import { useNavigation } from "@react-navigation/native";
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import { auth, db } from "../../firebase";
 
 export default function ViewJobInfo({ route }) {
   const navigation = useNavigation();
   const jobInfo = route.params;
+  const [candidateInfo, setCandidateInfo] = useState(null);
+  // A reference to access recruiter information who posted the job
+  //   console.log(jobInfo.recruiterInfo.recruiterEmail);
   const { StatusBarManager } = NativeModules;
-  const applyJob = () => {
-    Alert.alert("Apply For Job", "Continue to apply for this Job.", [
-      {
-        text: "OK",
-        style: "default",
-      },
-      {
-        text: "Cancel",
-        style: "cancel",
-      },
-    ]);
+
+  useEffect(() => {
+    const getCandidateInfo = async () => {
+      const candidateDocRef = doc(db, "users", `${auth.currentUser.uid}`);
+      const candidateDocSnap = await getDoc(candidateDocRef);
+
+      if (candidateDocSnap.exists()) {
+        setCandidateInfo(candidateDocSnap.data());
+      }
+    };
+
+    getCandidateInfo();
+  }, []);
+
+  const addDataToCandidate = async () => {
+    console.log("Function Executed");
+    const candidateDocRef2 = doc(db, "users", `${auth.currentUser.uid}`);
+    const candidateDocSnap2 = await getDoc(candidateDocRef2);
+
+    if (candidateDocSnap2.exists()) {
+      try {
+        const existingAppliedJobs = candidateDocSnap2.data().appliedJobs || [];
+
+        existingAppliedJobs.push(jobInfo);
+
+        await setDoc(
+          candidateDocRef2,
+          {
+            jobApplied: existingAppliedJobs,
+          },
+          { merge: true }
+        );
+      } catch (error) {
+        Alert.alert("Error", error, [
+          {
+            text: "OK",
+            style: "default",
+          },
+          {
+            text: "Cancel",
+            style: "cancel",
+          },
+        ]);
+      }
+    }
+  };
+
+  const applyJob = async () => {
+    // Implement Get Recruiter Information Here and push candidate info to recruiter profile in a variable named candidateApplied: {candidateInfoHere}
+
+    const recuriterDocRef = doc(
+      db,
+      "users",
+      `${jobInfo.recruiterInfo.recruiterId}`
+    );
+    const recruiterDocSnap = await getDoc(recuriterDocRef);
+
+    if (recruiterDocSnap.exists()) {
+      try {
+        const existingCandidates =
+          recruiterDocSnap.data().candidatesApplied || [];
+
+        existingCandidates.push(candidateInfo);
+
+        await setDoc(
+          recuriterDocRef,
+          {
+            candidatesApplied: existingCandidates,
+          },
+          { merge: true }
+        );
+
+        // Add Job Applied Data to Candidate Profile Also
+        await addDataToCandidate();
+
+        Alert.alert("Job Applied", "Your request has been sent to recruiter", [
+          {
+            text: "OK",
+            style: "default",
+          },
+          {
+            text: "Cancel",
+            style: "cancel",
+          },
+        ]);
+
+        navigation.goBack();
+      } catch (error) {
+        Alert.alert("Error", error, [
+          {
+            text: "OK",
+            style: "default",
+          },
+          {
+            text: "Cancel",
+            style: "cancel",
+          },
+        ]);
+      }
+    }
   };
   return (
     <ScrollView
