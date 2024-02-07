@@ -8,4 +8,5 @@ export const theme = {
   lightColor: "#616161",
   extraLightBackground: "#fafafa",
   whiteColor: "#ffffff",
+  greenColor: "#00910a"
 };
