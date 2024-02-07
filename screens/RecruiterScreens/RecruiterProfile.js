@@ -21,6 +21,7 @@ import {
   XCircleIcon,
 } from "react-native-heroicons/outline";
 import AllCandidates from "../CandidateScreens/AllCandidates";
+import HireOrRejectCandidate from "./HireOrRejectCandidate";
 
 export default function RecruiterProfile() {
   const { StatusBarManager } = NativeModules;
@@ -357,7 +358,7 @@ export default function RecruiterProfile() {
                     <Text style={{ fontSize: 16, fontWeight: 600 }}>
                       Profiles
                     </Text>
-                    <AllCandidates
+                    <HireOrRejectCandidate
                       candidateList={userProfile.candidatesApplied}
                     />
                   </View>
