@@ -3,6 +3,7 @@ import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs"
 // Screens Import
 import LoginScreen from "./screens/LoginScreen";
 import LookFor from "./screens/LookFor";
@@ -42,10 +43,22 @@ import UpdateProfile from "./screens/RecruiterScreens/components/UpdateProfile";
 import UpdateCandidateProfile from "./screens/CandidateScreens/components/UpdateCandidateProfile";
 import ViewJobInfo from "./screens/CandidateScreens/ViewJobInfo";
 import JobsInfo from "./screens/CandidateScreens/JobsInfo";
+import HireOrRejectRC from "./screens/RecruiterScreens/HireOrRejectRC";
 
 export default function Navigation() {
   const Stack = createNativeStackNavigator();
   const Tab = createBottomTabNavigator();
+  const TopTabs = createMaterialTopTabNavigator();
+
+  function TopTabsNavigation()  {
+      return(
+          <TopTabs.Navigator initialRouteName={'Applied Jobs'}>
+              <TopTabs.Screen name={"Applied Jobs"} component={JobsInfo} />
+              <TopTabs.Screen name={"Accepted"} component={JobsInfo} />
+              <TopTabs.Screen name={"Rejected"} component={JobsInfo} />
+          </TopTabs.Navigator>
+      )
+  }
 
   function BottomTabsRecruiter() {
     return (
@@ -153,7 +166,7 @@ export default function Navigation() {
 
         <Tab.Screen
           name="AppliedJobs"
-          component={JobsInfo}
+          component={TopTabsNavigation}
           options={{
             headerShown: false,
             title: "Jobs Applied",
@@ -235,6 +248,7 @@ export default function Navigation() {
           component={ViewCandidateProfile}
           options={{ headerShown: false }}
         />
+          <Stack.Screen name={"HireOrRejectCandidate"} component={HireOrRejectRC} options={{headerShown: false}} />
         <Stack.Screen
           name="ViewRecruiterProfile"
           component={ViewRecruiterProfile}
