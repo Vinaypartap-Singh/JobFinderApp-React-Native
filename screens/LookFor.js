@@ -124,6 +124,27 @@ export default function LookFor() {
               Want To Get Job
             </Text>
           </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => navigation.replace("Login")}
+            style={{
+              paddingHorizontal: 20,
+              paddingVertical: 30,
+              borderRadius: 10,
+              marginTop: 20,
+            }}
+          >
+            <Text
+              style={{
+                color: "black",
+                textAlign: "center",
+                fontSize: 16,
+                fontWeight: 700,
+              }}
+            >
+              Login
+            </Text>
+          </TouchableOpacity>
         </View>
       )}
     </View>
